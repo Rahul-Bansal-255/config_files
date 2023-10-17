@@ -51,10 +51,8 @@ set modifiable
 
 
 " Notes
-" di] da] dt<space> df<space>
-" vi"
-" the dot command
-" :earlier 2m
-" :normal <command you want to run in normal mode>
-" m<char> `<char>
-" :reg
+
+" To enable paste mode in vim
+" :set paste
+" :set nopaste
+" In insert mode CTRL+[ works as <ESC>
