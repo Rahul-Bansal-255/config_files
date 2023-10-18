@@ -17,8 +17,8 @@ Plug 'https://github.com/ycm-core/YouCompleteMe'
 Plug 'https://github.com/sheerun/vim-polyglot'
 Plug 'https://github.com/mg979/vim-visual-multi'
 
-Plug 'vim-airline/vim-airline'
-g:airline_powerline_fonts = 1
+Plug 'https://github.com/vim-airline/vim-airline'
+let g:airline_powerline_fonts = 1
 
 call plug#end()
 
