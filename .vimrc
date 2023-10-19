@@ -9,7 +9,10 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'https://github.com/tpope/vim-fugitive'
+
 Plug 'https://github.com/preservim/nerdtree'
+nnoremap <leader>n :NERDTreeFocus<CR>
+
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'https://github.com/dense-analysis/ale'
@@ -51,7 +54,8 @@ colorscheme industry
 set background=dark
 set clipboard=unnamedplus
 set modifiable
-
+set cursorline
+set cursorcolumn
 
 " Notes
 
