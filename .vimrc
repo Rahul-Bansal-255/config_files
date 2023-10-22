@@ -16,15 +16,10 @@ nnoremap <leader>n :NERDTreeFocus<CR>
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'https://github.com/dense-analysis/ale'
-Plug 'https://github.com/ycm-core/YouCompleteMe'
 Plug 'https://github.com/sheerun/vim-polyglot'
 Plug 'https://github.com/mg979/vim-visual-multi'
 
-Plug 'https://github.com/vim-airline/vim-airline'
-let g:airline_powerline_fonts = 1
-
 call plug#end()
-
 
 " Reference https://www.freecodecamp.org/news/vimrc-configuration-guide-customize-your-vim-editor/
 " Reference Sandeep Kapse's .vimrc
@@ -56,6 +51,7 @@ set clipboard=unnamedplus
 set modifiable
 set cursorline
 set cursorcolumn
+
 
 " Notes
 
