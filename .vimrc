@@ -6,8 +6,6 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'https://github.com/tpope/vim-fugitive'
-
 Plug 'https://github.com/preservim/nerdtree'
 nnoremap <leader>on :NERDTreeFocus<CR>
 nnoremap <leader>cn :NERDTreeClose<CR>
