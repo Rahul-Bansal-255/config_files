@@ -22,7 +22,7 @@ let g:ale_linters = {
             \ 'vim': ['vint'],
             \}
 let g:ale_completion_enabled = 1
-nnoremap <Leader>tl :ALEToggle<cr> " linter toggle
+nnoremap <leader>tl :ALEToggle<CR> " linter toggle
 
 Plug 'https://github.com/sheerun/vim-polyglot'
 
