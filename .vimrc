@@ -35,6 +35,7 @@ filetype plugin on
 filetype indent on
 syntax on
 set number
+set relativenumber
 set shiftwidth=4
 set tabstop=4
 set expandtab
@@ -56,3 +57,4 @@ set clipboard=unnamedplus
 set modifiable
 set cursorline
 set cursorcolumn
+
