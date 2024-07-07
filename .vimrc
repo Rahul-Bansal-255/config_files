@@ -100,3 +100,15 @@ set cursorline
 " Highlight cursor line underneath the cursor vertically.
 set cursorcolumn
 
+" Netrw file explorer toggle on [\o]
+nnoremap <leader>o :Lexplore<CR>
+
+" Remove netrw banner
+let g:netrw_banner = 0
+
+" netrw list style
+let g:netrw_liststyle = 3
+
+" size of window
+let g:netrw_winsize = 25
+
