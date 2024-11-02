@@ -13,9 +13,9 @@ filetype indent on
 " Enable syntax highlighting
 syntax on
 
-" Add line numbers to the file.
+" Add line numbers to the file:
 set number
-set relativenumber
+" set relativenumber
 
 " Set shift width to 4 spaces.
 set shiftwidth=4
