@@ -112,8 +112,10 @@ let g:netrw_liststyle = 3
 " size of window
 let g:netrw_winsize = 25
 
-" fold based on indent
-set foldmethod=indent
+" fold based on indent:
+" set foldmethod=indent
+"
+" Commands to control fold:
 " z M - Close all
 " z R - Open all
 " z a - Toggle all
