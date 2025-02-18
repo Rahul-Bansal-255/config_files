@@ -9,5 +9,6 @@ ln -s "$TMUX_CONFIG_PATH" "$HOME/$TMUX_CONFIG"
 
 git config --global alias.tree 'log --all --decorate --graph --oneline'
 git config --global alias.tree-full 'log --all --decorate --graph'
+git config --global alias.show-files 'show --name-status --oneline'
 
 tmux source "$HOME/$TMUX_CONFIG"
