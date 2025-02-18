@@ -7,7 +7,7 @@ TMUX_CONFIG_PATH="${PWD}/${TMUX_CONFIG}"
 ln -s "$VIM_CONFIG_PATH" "$HOME/$VIM_CONFIG"
 ln -s "$TMUX_CONFIG_PATH" "$HOME/$TMUX_CONFIG"
 
-git config --global alias.tree 'git log --all --decorate --graph --oneline'
-git config --global alias.tree-full 'git log --all --decorate --graph'
+git config --global alias.tree 'log --all --decorate --graph --oneline'
+git config --global alias.tree-full 'log --all --decorate --graph'
 
 tmux source "$HOME/$TMUX_CONFIG"
