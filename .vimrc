@@ -15,16 +15,6 @@ syntax on
 
 " Add line numbers to the file:
 set number
-" set relativenumber
-
-" Set shift width to 4 spaces.
-set shiftwidth=4
-
-" Set tab width to 4 columns.
-set tabstop=4
-
-" Use spaces instead of tabs
-set expandtab
 
 " Wrap the text to next line
 set wrap
@@ -99,26 +89,3 @@ set cursorline
 
 " Highlight cursor line underneath the cursor vertically.
 set cursorcolumn
-
-" Netrw file explorer toggle on [\o]
-nnoremap <leader>o :Lexplore<CR>
-
-" Remove netrw banner
-let g:netrw_banner = 0
-
-" netrw list style
-let g:netrw_liststyle = 3
-
-" size of window
-let g:netrw_winsize = 25
-
-" fold based on indent:
-" set foldmethod=indent
-"
-" Commands to control fold:
-" z M - Close all
-" z R - Open all
-" z a - Toggle all
-" z c - Close
-" z o - Open
-
