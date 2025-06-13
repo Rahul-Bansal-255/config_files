@@ -42,42 +42,57 @@ vim.opt.rtp:prepend(lazypath)
 ------------------------------------------------------------
 require("lazy").setup({
   -- LSP & Completion
-  { 'neovim/nvim-lspconfig' },
-  { 'hrsh7th/nvim-cmp' },
-  { 'hrsh7th/cmp-nvim-lsp' },
-  { 'L3MON4D3/LuaSnip' },
+  { 'neovim/nvim-lspconfig' },                             -- Quickstart configs for Nvim LSP
+  { 'hrsh7th/nvim-cmp' },                                  -- A completion plugin for neovim coded in Lua
+  { 'hrsh7th/cmp-nvim-lsp' },                              -- nvim-cmp source for neovim's built-in language server client
+  { 'L3MON4D3/LuaSnip' },                                  -- Snippet Engine for Neovim written in Lua
 
   -- Syntax Highlighting
-  { 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
-  { 'nvim-treesitter/nvim-treesitter-context' },
+  {
+      'nvim-treesitter/nvim-treesitter',
+      build = ":TSUpdate",
+  },                                                       -- Nvim Treesitter configurations and abstraction layer
+  { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
 
   -- UI & UX
-  { 'nvim-tree/nvim-tree.lua' },
-  { 'nvim-lualine/lualine.nvim' },
-  { 'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons' },
-  { 'folke/which-key.nvim' },
-  { 'windwp/nvim-autopairs' },
+  { 'nvim-tree/nvim-tree.lua' },                           -- A file explorer tree for neovim written in lua
+  { 'nvim-lualine/lualine.nvim' },                         -- Neovim statusline plugin written in lua
+  {
+      'akinsho/bufferline.nvim',
+      version = "*",
+      dependencies = 'nvim-tree/nvim-web-devicons',
+  },                                                       -- A snazzy bufferline for Neovim
+  { 'folke/which-key.nvim' },                              -- Show available keybindings in a popup as you type
+  { 'windwp/nvim-autopairs' },                             -- Autopairs for neovim written in lua
 
   -- Git
-  { 'lewis6991/gitsigns.nvim' },
-  { 'tpope/vim-fugitive' },
-  { 'junegunn/gv.vim' },
-  { 'TimUntersberger/neogit', dependencies = 'nvim-lua/plenary.nvim' },
-  { 'sindrets/diffview.nvim', dependencies = 'nvim-lua/plenary.nvim' },
+  { 'lewis6991/gitsigns.nvim' },                           -- Git integration for buffers
+  { 'tpope/vim-fugitive' },                                -- fugitive.vim: A Git wrapper so awesome, it should be illegal
+  {
+      'NeogitOrg/neogit',
+      dependencies = 'nvim-lua/plenary.nvim',
+  },                                                       -- Git interface for Neovim inspired by Magit
+  {
+      'sindrets/diffview.nvim',
+      dependencies = 'nvim-lua/plenary.nvim',
+  },                                                       -- Single tabpage interface for easily cycling through diffs
 
   -- Telescope
-  { 'nvim-telescope/telescope.nvim', dependencies = 'nvim-lua/plenary.nvim' },
+  {
+      'nvim-telescope/telescope.nvim',
+      dependencies = 'nvim-lua/plenary.nvim',
+  },                                                       -- Fuzzy finder
 
   -- Theme
-  { 'morhetz/gruvbox' },
+  { 'morhetz/gruvbox' },                                   -- Retro groove color scheme for Vim
 
   -- Formatter & Debugger
-  { 'mhartington/formatter.nvim' },
-  { 'mfussenegger/nvim-dap' },
-  { 'rcarriga/nvim-dap-ui' },
+  { 'mhartington/formatter.nvim' },                        -- Formatter
+  { 'mfussenegger/nvim-dap' },                             -- Debug Adapter Protocol client implementation for Neovim
+  { 'rcarriga/nvim-dap-ui' },                              -- A UI for nvim-dap
 
   -- Renderer
-  { 'MeanderingProgrammer/render-markdown.nvim' },
+  { 'MeanderingProgrammer/render-markdown.nvim' },         -- Plugin to improve viewing Markdown files in Neovim
 })
 
 vim.cmd("colorscheme gruvbox")
@@ -125,11 +140,11 @@ require'nvim-treesitter.configs'.setup {
 }
 
 require'treesitter-context'.setup{
-  enable = true,            -- Enable this plugin (Can be disabled for large files)
-  max_lines = 5,            -- How many lines the context window can span
+  enable = false,           -- Enable this plugin (Can be disabled for large files)
+  max_lines = 3,            -- How many lines the context window can span
   trim_scope = 'inner',     -- 'inner' or 'outer'
   mode = 'topline',         -- 'cursor', 'topline'
-  separator = nil,          -- e.g. '─' to separate context and content
+  separator = nil,          -- e.g. nil or '─' to separate context and content
   zindex = 3,               -- The Z-index of the context window
 }
 
@@ -229,7 +244,7 @@ end)
 -- Git Integration
 require('neogit').setup()
 vim.keymap.set('n', '<leader>gs', ':Neogit<CR>', { desc = "Neogit Status" })
-vim.keymap.set('n', '<leader>gl', ':GV<CR>', { desc = "Git Log Tree" })
+vim.keymap.set('n', '<leader>gl', '<cmd>tab Git log --oneline --graph --decorate --all<cr>', { desc = "Git Log Tree" })
 vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = "Diff View" })
 vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory<CR>', { desc = "File History Tree" })
 vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>", { noremap = true, silent = true, desc = "Git Blame Line" })
