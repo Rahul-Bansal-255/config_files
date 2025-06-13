@@ -209,7 +209,10 @@ vim.keymap.set('n', '<leader>tl', ':tabnext<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>th', ':tabprev<CR>', { noremap = true })
 
 -- File Explorer
-vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>nn', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>nj', function()
+  require("nvim-tree.api").tree.find_file({ open = true, focus = true })
+end, { desc = "Reveal current file in NvimTree" })
 
 -- Telescope
 require('telescope').setup()
