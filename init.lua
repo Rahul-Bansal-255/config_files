@@ -75,6 +75,9 @@ require("lazy").setup({
   { 'mhartington/formatter.nvim' },
   { 'mfussenegger/nvim-dap' },
   { 'rcarriga/nvim-dap-ui' },
+
+  -- Renderer
+  { 'MeanderingProgrammer/render-markdown.nvim' },
 })
 
 vim.cmd("colorscheme gruvbox")
@@ -227,4 +230,9 @@ vim.keymap.set('n', '<leader>gl', ':GV<CR>', { desc = "Git Log Tree" })
 vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = "Diff View" })
 vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory<CR>', { desc = "File History Tree" })
 vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>", { noremap = true, silent = true, desc = "Git Blame Line" })
+
+-- Renderer
+vim.keymap.set("n", "<leader>rmd", function()
+  require("render-markdown").toggle()
+end, { desc = "Toggle Markdown Render" })
 
