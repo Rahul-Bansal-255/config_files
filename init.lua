@@ -17,6 +17,7 @@ vim.opt.mouse = 'a'
 vim.opt.list = true
 vim.opt.wrap = true
 vim.opt.listchars = { space = '⋅', tab = '→ ', trail = '•', eol = '↲' }
+vim.opt.scrolloff = 3
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -48,6 +49,7 @@ require("lazy").setup({
 
   -- Syntax Highlighting
   { 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
+  { 'nvim-treesitter/nvim-treesitter-context' },
 
   -- UI & UX
   { 'nvim-tree/nvim-tree.lua' },
@@ -119,6 +121,19 @@ require'nvim-treesitter.configs'.setup {
   highlight = { enable = true },
 }
 
+require'treesitter-context'.setup{
+  enable = true,            -- Enable this plugin (Can be disabled for large files)
+  max_lines = 5,            -- How many lines the context window can span
+  trim_scope = 'inner',     -- 'inner' or 'outer'
+  mode = 'topline',         -- 'cursor', 'topline'
+  separator = nil,          -- e.g. '─' to separate context and content
+  zindex = 3,               -- The Z-index of the context window
+}
+
+vim.keymap.set("n", "<leader>c", function()
+  require("treesitter-context").toggle()
+end, { desc = "Toggle Treesitter Context" })
+
 ------------------------------------------------------------
 -- Formatting Setup
 ------------------------------------------------------------
@@ -128,7 +143,7 @@ require('formatter').setup({
     cpp = { function() return { exe = "clang-format", args = {}, stdin = true } end }
   }
 })
-vim.keymap.set("n", "<leader>f", ":Format<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>F", ":Format<CR>", { noremap = true })
 
 ------------------------------------------------------------
 -- Debugging Setup
