@@ -231,6 +231,7 @@ end, { desc = "Reveal current file in NvimTree" })
 
 -- Telescope
 require('telescope').setup()
+-- <C-r>" – paste last yanked text in insert mode
 vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>")
 vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>")
 vim.keymap.set('n', '<leader>fh', ":Telescope command_history<CR>")
