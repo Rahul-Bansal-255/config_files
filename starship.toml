@@ -1,0 +1,62 @@
+format = """
+[](#8B0000)\
+$username$hostname\
+[](bg:#B22222 fg:#8B0000)\
+$directory\
+[](fg:#B22222 bg:#CD5C5C)\
+$git_branch$git_status\
+[](fg:#CD5C5C bg:#A52A2A)\
+$c$cpp$python\
+[](fg:#A52A2A bg:#2F4F4F)\
+$time\
+[](fg:#2F4F4F) \
+"""
+
+[username]
+show_always = true
+style_user = "bg:#8B0000"
+format = '[ $user ]($style)'
+
+[hostname]
+ssh_only = false
+style = "bg:#8B0000"
+format = '[ $hostname ]($style)'
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+style = "bg:#B22222"
+format = "[  $path ]($style)"
+
+[directory.substitutions]
+"Documents" = "📄"
+"Downloads" = "📥"
+"Music" = "🎜"
+"Pictures" = "📷"
+
+[git_branch]
+style = "bg:#CD5C5C"
+format = '[  $branch ]($style)'
+
+[git_status]
+style = "bg:#CD5C5C"
+format = '[[($all_status$ahead_behind )](bg:#CD5C5C)]($style)'
+
+[c]
+style = "bg:#A52A2A"
+format = '[  $version ]($style)'
+
+[cpp]
+style = "bg:#A52A2A"
+format = '[  $version ]($style)'
+
+[python]
+style = "bg:#A52A2A"
+format = '[  ($version) ]($style)'
+
+[time]
+disabled = false
+time_format = "%H:%M:%S"
+style = "bg:#2F4F4F"
+format = '[  $time ]($style)'
+
