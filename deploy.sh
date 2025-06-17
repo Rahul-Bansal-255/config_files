@@ -34,6 +34,7 @@ ln -s "$NVIM_CONFIG_FILE_SRC" "$NVIM_CONFIG_FILE_DEST"
 mkdir -p "$STARSHIP_CONFIG_PATH_DEST"
 ln -s "$STARSHIP_CONFIG_FILE_SRC" "$STARSHIP_CONFIG_FILE_DEST"
 
+git config --global core.editor vim
 git config --global alias.tree 'log --all --decorate --graph --oneline'
 git config --global alias.tree-full 'log --all --decorate --graph'
 git config --global alias.show-files 'show --name-status --oneline'
