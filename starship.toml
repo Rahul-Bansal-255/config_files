@@ -1,57 +1,57 @@
 format = """
-[](#FF4500)\
+[](#A0522D)\
 $username$hostname\
-[](bg:#FF6347 fg:#FF4500)\
+[](bg:#BC8F8F fg:#A0522D)\
 $directory\
-[](fg:#FF6347 bg:#FF7F50)\
+[](fg:#BC8F8F bg:#D2B48C)\
 $git_branch$git_status\
-[](fg:#FF7F50 bg:#FFA07A)\
+[](fg:#D2B48C bg:#DEB887)\
 $c$cpp$python\
-[](fg:#FFA07A bg:#20B2AA)\
+[](fg:#DEB887 bg:#8FBC8F)\
 $time\
-[](fg:#20B2AA)
- [❯](fg:green) \
+[](fg:#8FBC8F)
+ [❯](fg:darkgreen) \
 """
 
 [username]
 show_always = true
-style_user = "bg:#FF4500 fg:black"
+style_user = "bg:#A0522D fg:black"
 format = '[ $user ]($style)'
 
 [hostname]
 ssh_only = false
-style = "bg:#FF4500 fg:black"
+style = "bg:#A0522D fg:black"
 format = '[ $hostname ]($style)'
 
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
-style = "bg:#FF6347 fg:black"
+style = "bg:#BC8F8F fg:black"
 format = "[  $path ]($style)"
 
 [git_branch]
-style = "bg:#FF7F50 fg:black"
+style = "bg:#D2B48C fg:black"
 format = '[  $branch ]($style)'
 
 [git_status]
-style = "bg:#FF7F50 fg:black"
+style = "bg:#D2B48C fg:black"
 format = '[$all_status$ahead_behind ]($style)'
 
 [c]
-style = "bg:#FFA07A fg:black"
+style = "bg:#DEB887 fg:black"
 format = '[  $version ]($style)'
 
 [cpp]
-style = "bg:#FFA07A fg:black"
+style = "bg:#DEB887 fg:black"
 format = '[  $version ]($style)'
 
 [python]
-style = "bg:#FFA07A fg:black"
+style = "bg:#DEB887 fg:black"
 format = '[  ($version) ]($style)'
 
 [time]
 disabled = false
 time_format = "%H:%M:%S"
-style = "bg:#20B2AA fg:black"
+style = "bg:#8FBC8F fg:black"
 format = '[  $time ]($style)'
 
