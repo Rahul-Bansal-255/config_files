@@ -9,7 +9,8 @@ $git_branch$git_status\
 $c$cpp$python\
 [](fg:#FFA07A bg:#20B2AA)\
 $time\
-[](fg:#20B2AA) \
+[](fg:#20B2AA)
+ [❯](fg:green) \
 """
 
 [username]
