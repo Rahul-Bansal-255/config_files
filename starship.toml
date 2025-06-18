@@ -1,16 +1,16 @@
 format = """
 [](#A0522D)\
 $username$hostname\
-[](bg:#BC8F8F fg:#A0522D)\
+[](fg:#A0522D bg:#BC8F8F)\
 $directory\
 [](fg:#BC8F8F bg:#D2B48C)\
 $git_branch$git_status\
-[](fg:#D2B48C bg:#DEB887)\
+[](fg:#D2B48C bg:#8FBC8F)\
 $c$cpp$python\
-[](fg:#DEB887 bg:#8FBC8F)\
+[](fg:#8FBC8F bg:#778899)\
 $time\
-[](fg:#8FBC8F)
- [❯](fg:darkgreen) \
+[](fg:#778899)
+ [❯](fg:#006400) \
 """
 
 [username]
@@ -38,20 +38,20 @@ style = "bg:#D2B48C fg:black"
 format = '[$all_status$ahead_behind ]($style)'
 
 [c]
-style = "bg:#DEB887 fg:black"
+style = "bg:#8FBC8F fg:black"
 format = '[  $version ]($style)'
 
 [cpp]
-style = "bg:#DEB887 fg:black"
+style = "bg:#8FBC8F fg:black"
 format = '[  $version ]($style)'
 
 [python]
-style = "bg:#DEB887 fg:black"
+style = "bg:#8FBC8F fg:black"
 format = '[  ($version) ]($style)'
 
 [time]
 disabled = false
 time_format = "%H:%M:%S"
-style = "bg:#8FBC8F fg:black"
+style = "bg:#778899 fg:black"
 format = '[  $time ]($style)'
 
