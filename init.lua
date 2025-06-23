@@ -195,7 +195,15 @@ vim.keymap.set('n', '<leader>b', ":lua require'dap'.toggle_breakpoint()<CR>")
 ------------------------------------------------------------
 -- UI Enhancements
 ------------------------------------------------------------
-require('lualine').setup()
+require('lualine').setup {
+  sections = {
+    lualine_c = {
+      function()
+        return vim.fn.expand('%:p')  -- absolute path
+      end
+    }
+  }
+}
 require('nvim-tree').setup()
 require('bufferline').setup {
   options = {
