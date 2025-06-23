@@ -259,8 +259,9 @@ require('neogit').setup()
 vim.keymap.set('n', '<leader>gs', ':Neogit<CR>', { desc = "Neogit Status" })
 vim.keymap.set('n', '<leader>gl', '<cmd>tab Git log --oneline --graph --decorate --all<cr>', { desc = "Git Log Tree" })
 vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = "Diff View" })
-vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory<CR>', { desc = "File History Tree" })
 vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>", { noremap = true, silent = true, desc = "Git Blame Line" })
+vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory %<CR>', { desc = "Current File Git History" })
+vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>', { desc = "File History Tree" })
 
 -- Renderer
 vim.keymap.set("n", "<leader>rmd", function()
