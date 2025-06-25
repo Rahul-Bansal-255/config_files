@@ -233,8 +233,8 @@ for i = 1, 9 do
     vim.cmd('tabnext ' .. i)
   end, { noremap = true, silent = true })
 end
-vim.keymap.set('n', '<leader>tn', ':tabnew<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>tc', ':tabclose<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>tc', ':tabnew<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>tx', ':tabclose<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>tl', ':tabnext<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>th', ':tabprev<CR>', { noremap = true })
 
