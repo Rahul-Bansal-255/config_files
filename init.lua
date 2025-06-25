@@ -16,8 +16,11 @@ vim.opt.termguicolors = true
 vim.opt.mouse = 'a'
 vim.opt.list = false
 vim.opt.wrap = true
-vim.opt.listchars = { space = '⋅', tab = '→ ', trail = '•', eol = '↲' }
+vim.opt.listchars = {
+    space = '⋅', tab = '→ ', trail = '•', eol = '↲',
+}
 vim.opt.scrolloff = 3
+vim.opt.laststatus = 3                                     -- Set how the statusline behaves across splits and windows.
 
 vim.diagnostic.config({
   virtual_text = false,
