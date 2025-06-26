@@ -246,6 +246,16 @@ end, { desc = "Reveal current file in NvimTree" })
 
 -- Telescope
 require('telescope').setup({
+  defaults = {
+    layout_strategy = "vertical",
+    layout_config = {
+      vertical = {
+        width = 0.9,           -- Width of the window (float or int)
+        height = 0.9,          -- Height of the window
+        preview_height = 0.4,  -- Height of preview pane (relative to window height)
+      },
+    },
+  },
   pickers = {
     find_files = {
       hidden = true,        -- Show hidden files
