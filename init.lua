@@ -56,6 +56,10 @@ require("lazy").setup({
       build = ":TSUpdate",
   },                                                       -- Nvim Treesitter configurations and abstraction layer
   { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
+  {
+    "MTDL9/vim-log-highlighting",
+    ft = { "log" },
+  },                                                       -- Syntax highlighting for generic log files in VIM
 
   -- UI & UX
   { 'nvim-tree/nvim-tree.lua' },                           -- A file explorer tree for neovim written in lua
