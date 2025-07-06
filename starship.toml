@@ -47,7 +47,7 @@ format = '[  $version ]($style)'
 
 [python]
 style = "bg:#8FBC8F fg:black"
-format = '[  ($version) ]($style)'
+format = '[ (\($virtualenv\))  ($version) ]($style)'
 
 [time]
 disabled = false
