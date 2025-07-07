@@ -30,6 +30,9 @@ vim.diagnostic.config({
   severity_sort = true,
 })
 
+vim.opt.foldmethod = "indent"
+vim.opt.foldenable = false
+
 ------------------------------------------------------------
 -- Plugin Manager Bootstrap
 ------------------------------------------------------------
@@ -149,10 +152,6 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "cpp", "lua", "python" },
   highlight = { enable = true },
 }
-
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt.foldenable = false
 
 require'treesitter-context'.setup{
   enable = false,           -- Enable this plugin (Can be disabled for large files)
