@@ -150,6 +150,10 @@ require'nvim-treesitter.configs'.setup {
   highlight = { enable = true },
 }
 
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldenable = false
+
 require'treesitter-context'.setup{
   enable = false,           -- Enable this plugin (Can be disabled for large files)
   max_lines = 3,            -- How many lines the context window can span
