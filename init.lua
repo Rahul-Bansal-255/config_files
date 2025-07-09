@@ -111,17 +111,29 @@ vim.cmd("colorscheme gruvbox")
 -- LSP Configuration
 ------------------------------------------------------------
 local lspconfig = require('lspconfig')
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+-- Shared `on_attach` logic
+local on_attach = function(_, bufnr)
+  local opts = { noremap = true, silent = true, buffer = bufnr }
+  vim.keymap.set('n', "<leader>d", vim.lsp.buf.hover, opts)
+  vim.keymap.set('n', "<leader>j", vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', '<leader>J', function()
+    vim.cmd('tab split')
+    vim.lsp.buf.definition()
+  end, opts)
+end
+
+-- C/C++ setup
 lspconfig.clangd.setup({
-  on_attach = function(_, bufnr)
-    local opts = { noremap=true, silent=true, buffer=bufnr }
-    vim.keymap.set('n', "<leader>d", vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', "<leader>j", vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', '<leader>J', function()
-      vim.cmd('tab split')
-      vim.lsp.buf.definition()
-    end, opts)
-  end,
-  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
+-- Python setup
+lspconfig.pylsp.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
 })
 
 ------------------------------------------------------------
