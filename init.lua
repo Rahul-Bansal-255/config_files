@@ -33,6 +33,9 @@ vim.diagnostic.config({
 vim.opt.foldmethod = "indent"
 vim.opt.foldenable = false
 
+vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
+
 ------------------------------------------------------------
 -- Plugin Manager Bootstrap
 ------------------------------------------------------------
