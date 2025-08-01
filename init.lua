@@ -97,7 +97,8 @@ require("lazy").setup({
   },                                                       -- Fuzzy finder
 
   -- Theme
-  { 'morhetz/gruvbox' },                                   -- Retro groove color scheme for Vim
+  { 'morhetz/gruvbox' , name = 'gruvbox' },                -- Retro groove color scheme for Vim
+  { 'rose-pine/neovim', name = 'rose-pine' },              -- Soho vibes for Neovim
 
   -- Formatter & Debugger
   { 'mhartington/formatter.nvim' },                        -- Formatter
@@ -108,7 +109,7 @@ require("lazy").setup({
   { 'MeanderingProgrammer/render-markdown.nvim' },         -- Plugin to improve viewing Markdown files in Neovim
 })
 
-vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme rose-pine")
 
 ------------------------------------------------------------
 -- LSP Configuration
