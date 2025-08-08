@@ -109,7 +109,7 @@ require("lazy").setup({
   { 'MeanderingProgrammer/render-markdown.nvim' },         -- Plugin to improve viewing Markdown files in Neovim
 })
 
-vim.cmd("colorscheme rose-pine")
+vim.cmd("colorscheme gruvbox")
 
 ------------------------------------------------------------
 -- LSP Configuration
@@ -260,13 +260,18 @@ for i = 1, 9 do
     vim.cmd('tabnext ' .. i)
   end, { noremap = true, silent = true })
 end
-vim.keymap.set('n', '<leader>tc', ':tabnew<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>tx', ':tabclose<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>tl', ':tabnext<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>th', ':tabprev<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>tH', ':tabmove -1<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>tL', ':tabmove +1<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>tc', ':tabnew<CR>',     { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tx', ':tabclose<CR>',   { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tl', ':tabnext<CR>',    { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>th', ':tabprev<CR>',    { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tH', ':tabmove -1<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tL', ':tabmove +1<CR>', { noremap = true, silent = true })
 
+-- Directional window navigation
+vim.keymap.set('n', '<leader>wh', '<C-w>h', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>wj', '<C-w>j', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>wk', '<C-w>k', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>wl', '<C-w>l', { noremap = true, silent = true })
 
 -- File Explorer
 vim.keymap.set('n', '<leader>nn', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
