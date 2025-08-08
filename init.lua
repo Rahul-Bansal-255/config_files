@@ -249,7 +249,9 @@ require('bufferline').setup {
   }
 }
 require('which-key').setup()
-require('gitsigns').setup()
+require('gitsigns').setup({
+    current_line_blame = true
+})
 
 ------------------------------------------------------------
 -- Key Mappings
