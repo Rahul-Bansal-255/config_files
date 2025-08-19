@@ -189,6 +189,17 @@ require('lualine').setup {
       function()
         return vim.fn.expand('%:p')  -- absolute path
       end
+    },
+    lualine_x = {},
+    lualine_y = {
+      function()
+        return string.format("%d/%d", vim.fn.line("."), vim.fn.line("$"))
+      end,
+    },
+    lualine_z = {
+      function()
+        return string.format("%d/%d", vim.fn.col("."), #vim.fn.getline("."))
+      end,
     }
   }
 }
