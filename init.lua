@@ -57,22 +57,15 @@ require("lazy").setup({
   { 'L3MON4D3/LuaSnip' },                                  -- Snippet Engine for Neovim written in Lua
 
   -- Syntax Highlighting
-  {
-      'nvim-treesitter/nvim-treesitter',
-      build = ":TSUpdate",
-  },                                                       -- Nvim Treesitter configurations and abstraction layer
+  { 'nvim-treesitter/nvim-treesitter' },                   -- Nvim Treesitter configurations and abstraction layer
   { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
-  {
-    "MTDL9/vim-log-highlighting",
-    ft = { "log" },
-  },                                                       -- Syntax highlighting for generic log files in VIM
+  { "MTDL9/vim-log-highlighting", ft = { "log" } },        -- Syntax highlighting for generic log files in VIM
 
   -- UI & UX
   { 'nvim-tree/nvim-tree.lua' },                           -- A file explorer tree for neovim written in lua
   { 'nvim-lualine/lualine.nvim' },                         -- Neovim statusline plugin written in lua
   {
       'akinsho/bufferline.nvim',
-      version = "*",
       dependencies = 'nvim-tree/nvim-web-devicons',
   },                                                       -- A snazzy bufferline for Neovim
   { 'folke/which-key.nvim' },                              -- Show available keybindings in a popup as you type
@@ -81,10 +74,6 @@ require("lazy").setup({
   -- Git
   { 'lewis6991/gitsigns.nvim' },                           -- Git integration for buffers
   { 'tpope/vim-fugitive' },                                -- fugitive.vim: A Git wrapper so awesome, it should be illegal
-  {
-      'NeogitOrg/neogit',
-      dependencies = 'nvim-lua/plenary.nvim',
-  },                                                       -- Git interface for Neovim inspired by Magit
   {
       'sindrets/diffview.nvim',
       dependencies = 'nvim-lua/plenary.nvim',
@@ -102,8 +91,6 @@ require("lazy").setup({
 
   -- Formatter & Debugger
   { 'mhartington/formatter.nvim' },                        -- Formatter
-  { 'mfussenegger/nvim-dap' },                             -- Debug Adapter Protocol client implementation for Neovim
-  { 'rcarriga/nvim-dap-ui' },                              -- A UI for nvim-dap
 
   -- Renderer
   { 'MeanderingProgrammer/render-markdown.nvim' },         -- Plugin to improve viewing Markdown files in Neovim
@@ -180,7 +167,7 @@ require'treesitter-context'.setup{
 
 vim.keymap.set("n", "<leader>c", function()
   require("treesitter-context").toggle()
-end, { desc = "Toggle Treesitter Context" })
+end, { noremap = true, silent = true })
 
 ------------------------------------------------------------
 -- Formatting Setup
@@ -191,36 +178,7 @@ require('formatter').setup({
     cpp = { function() return { exe = "clang-format", args = {}, stdin = true } end }
   }
 })
-vim.keymap.set("n", "<leader>F", ":Format<CR>", { noremap = true })
-
-------------------------------------------------------------
--- Debugging Setup
-------------------------------------------------------------
-local dap = require('dap')
-dap.adapters.cppdbg = {
-  id = 'cppdbg',
-  type = 'executable',
-  command = '/absolute/path/to/OpenDebugAD7',
-}
-dap.configurations.c = {
-  {
-    name = "Launch C Program",
-    type = "cppdbg",
-    request = "launch",
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-    end,
-    cwd = '${workspaceFolder}',
-    stopAtEntry = true,
-  }
-}
-dap.configurations.cpp = dap.configurations.c
-
-vim.keymap.set('n', '<F5>', ":lua require'dap'.continue()<CR>")
-vim.keymap.set('n', '<F10>', ":lua require'dap'.step_over()<CR>")
-vim.keymap.set('n', '<F11>', ":lua require'dap'.step_into()<CR>")
-vim.keymap.set('n', '<F12>', ":lua require'dap'.step_out()<CR>")
-vim.keymap.set('n', '<leader>b', ":lua require'dap'.toggle_breakpoint()<CR>")
+vim.keymap.set("n", "<leader>F", ":Format<CR>", { noremap = true, silent = true })
 
 ------------------------------------------------------------
 -- UI Enhancements
@@ -257,9 +215,9 @@ require('gitsigns').setup({
 -- Key Mappings
 ------------------------------------------------------------
 -- Tab Management
-for i = 1, 9 do
+for i = 0, 9 do
   vim.keymap.set('n', '<leader>t' .. i, function()
-    vim.cmd('tabnext ' .. i)
+    vim.cmd('tabnext ' .. i+1)
   end, { noremap = true, silent = true })
 end
 vim.keymap.set('n', '<leader>tc', ':tabnew<CR>',     { noremap = true, silent = true })
@@ -279,7 +237,7 @@ vim.keymap.set('n', '<leader>wl', '<C-w>l', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>nn', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>nj', function()
   require("nvim-tree.api").tree.find_file({ open = true, focus = true })
-end, { desc = "Reveal current file in NvimTree" })
+end,                                                     { noremap = true, silent = true })
 
 -- Telescope
 require('telescope').setup({
@@ -300,28 +258,22 @@ require('telescope').setup({
     },
   },
 })
--- <C-r>" – paste last yanked text in insert mode
-vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>")
-vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>")
-vim.keymap.set('n', '<leader>fh', ":Telescope command_history<CR>")
-vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>")
+vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true })
 
 -- Diagnostics
 vim.keymap.set('n', '<leader>e', function()
   vim.diagnostic.open_float(nil, { focus = false })
-end)
+end,                                                            { noremap = true, silent = true })
 
 -- Git Integration
-require('neogit').setup()
-vim.keymap.set('n', '<leader>gs', ':Neogit<CR>', { desc = "Neogit Status" })
-vim.keymap.set('n', '<leader>gl', '<cmd>tab Git log --oneline --graph --decorate --all<cr>', { desc = "Git Log Tree" })
-vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = "Diff View" })
-vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>", { noremap = true, silent = true, desc = "Git Blame Line" })
-vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory %<CR>', { desc = "Current File Git History" })
-vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>', { desc = "File History Tree" })
+vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>",   { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>',          { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true })
 
 -- Renderer
 vim.keymap.set("n", "<leader>rmd", function()
   require("render-markdown").toggle()
-end, { desc = "Toggle Markdown Render" })
+end,                                                            { noremap = true, silent = true })
 
