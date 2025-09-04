@@ -127,6 +127,12 @@ lspconfig.pylsp.setup({
   capabilities = capabilities,
 })
 
+-- Perl Navigator setup
+lspconfig.perlnavigator.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
 ------------------------------------------------------------
 -- Autocompletion
 ------------------------------------------------------------
@@ -152,7 +158,7 @@ cmp.setup({
 -- Treesitter Setup
 ------------------------------------------------------------
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "lua", "python" },
+  ensure_installed = { "c", "cpp", "lua", "python", "perl" },
   highlight = { enable = true },
 }
 
