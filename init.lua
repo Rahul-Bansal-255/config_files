@@ -158,7 +158,7 @@ cmp.setup({
 -- Treesitter Setup
 ------------------------------------------------------------
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "lua", "python", "perl" },
+  ensure_installed = { "c", "cpp", "lua", "python", "perl", "rst" },
   highlight = { enable = true },
 }
 
