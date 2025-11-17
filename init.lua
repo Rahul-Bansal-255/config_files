@@ -101,6 +101,7 @@ vim.cmd("colorscheme gruvbox")
 ------------------------------------------------------------
 -- LSP Configuration
 ------------------------------------------------------------
+local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Shared `on_attach` logic
@@ -115,22 +116,22 @@ local on_attach = function(_, bufnr)
 end
 
 -- C/C++ setup
-vim.lsp.config['clangd'] = {
-  cmd = { 'clangd' },
-  filetypes = { 'c', 'cpp' },
+lspconfig.clangd.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-}
-vim.lsp.enable('clangd')
+})
 
---  -- Python setup
-vim.lsp.config['pylsp'] = {
-  cmd = { 'pylsp' },
-  filetypes = { 'python' },
+-- Python setup
+lspconfig.pylsp.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-}
-vim.lsp.enable('pylsp')
+})
+
+-- Perl Navigator setup
+lspconfig.perlnavigator.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
 
 ------------------------------------------------------------
 -- Autocompletion
