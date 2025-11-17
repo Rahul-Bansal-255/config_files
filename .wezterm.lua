@@ -3,9 +3,17 @@ local act = wezterm.action
 
 
 local config = {
-    font_size = 12.0,
+    font_size = 14.0,
     enable_tab_bar = false,
 }
+
+
+wezterm.on("gui-startup", function(cmd)
+  local tab1, pane1, window = wezterm.mux.spawn_window(cmd or {})
+
+  pane1:activate()
+  window:gui_window():maximize()
+end)
 
 
 wezterm.on("toggle-tabbar", function(window, _)
@@ -22,7 +30,7 @@ end)
 
 
 config.keys = {
-    { key = "F11" ,                  action = wezterm.action.ToggleFullScreen },
+    { key = "F"   ,  mods = "CTRL",  action = wezterm.action.ToggleFullScreen },
     { key = "T"   ,  mods = "CTRL",  action = act.EmitEvent("toggle-tabbar") },
 }
 
