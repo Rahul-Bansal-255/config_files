@@ -132,6 +132,15 @@ vim.lsp.config['pylsp'] = {
 }
 vim.lsp.enable('pylsp')
 
+vim.lsp.config['rust_analyzer'] = {
+  cmd = { 'rust-analyzer' },
+  filetypes = { 'rust' },
+  root_markers = { 'Cargo.toml', '.git' },
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+vim.lsp.enable('rust_analyzer')
+
 ------------------------------------------------------------
 -- Autocompletion
 ------------------------------------------------------------
@@ -157,7 +166,7 @@ cmp.setup({
 -- Treesitter Setup
 ------------------------------------------------------------
 require'nvim-treesitter'.setup {
-  ensure_installed = { "c", "cpp", "lua", "python", "perl", "rst" },
+  ensure_installed = { "c", "cpp", "lua", "python", "perl", "rst", "rust" },
   highlight = { enable = true },
 }
 
