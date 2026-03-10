@@ -101,7 +101,6 @@ vim.cmd("colorscheme gruvbox")
 ------------------------------------------------------------
 -- LSP Configuration
 ------------------------------------------------------------
-local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Shared `on_attach` logic
@@ -116,22 +115,22 @@ local on_attach = function(_, bufnr)
 end
 
 -- C/C++ setup
-lspconfig.clangd.setup({
+vim.lsp.config['clangd'] = {
+  cmd = { 'clangd' },
+  filetypes = { 'c', 'cpp' },
   on_attach = on_attach,
   capabilities = capabilities,
-})
+}
+vim.lsp.enable('clangd')
 
--- Python setup
-lspconfig.pylsp.setup({
+--  -- Python setup
+vim.lsp.config['pylsp'] = {
+  cmd = { 'pylsp' },
+  filetypes = { 'python' },
   on_attach = on_attach,
   capabilities = capabilities,
-})
-
--- Perl Navigator setup
-lspconfig.perlnavigator.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
+}
+vim.lsp.enable('pylsp')
 
 ------------------------------------------------------------
 -- Autocompletion
@@ -157,7 +156,7 @@ cmp.setup({
 ------------------------------------------------------------
 -- Treesitter Setup
 ------------------------------------------------------------
-require'nvim-treesitter.configs'.setup {
+require'nvim-treesitter'.setup {
   ensure_installed = { "c", "cpp", "lua", "python", "perl", "rst" },
   highlight = { enable = true },
 }
