@@ -18,6 +18,7 @@ $time\
 [username]
 show_always = true
 style_user = "bg:#6C4F3D fg:black"
+style_root = "bg:#6C4F3D fg:black"
 format = '[ $user ]($style)'
 
 [hostname]
