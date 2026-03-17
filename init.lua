@@ -55,6 +55,7 @@ require("lazy").setup({
   { 'hrsh7th/nvim-cmp' },                                  -- A completion plugin for neovim coded in Lua
   { 'hrsh7th/cmp-nvim-lsp' },                              -- nvim-cmp source for neovim's built-in language server client
   { 'L3MON4D3/LuaSnip' },                                  -- Snippet Engine for Neovim written in Lua
+  { 'mrcjkb/rustaceanvim' },                               -- 🦀 Supercharge your Rust experience in Neovim!
 
   -- Syntax Highlighting
   { 'nvim-treesitter/nvim-treesitter' },                   -- Nvim Treesitter configurations and abstraction layer
@@ -123,7 +124,7 @@ vim.lsp.config['clangd'] = {
 }
 vim.lsp.enable('clangd')
 
---  -- Python setup
+-- Python setup
 vim.lsp.config['pylsp'] = {
   cmd = { 'pylsp' },
   filetypes = { 'python' },
@@ -131,6 +132,36 @@ vim.lsp.config['pylsp'] = {
   capabilities = capabilities,
 }
 vim.lsp.enable('pylsp')
+
+-- Rust setup
+vim.g.rustaceanvim = {
+  server = {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+      ["rust-analyzer"] = {
+        cargo = {
+          allFeatures = false,       -- reduce feature explosion
+          runBuildScripts = false,   -- skip build.rs
+        },
+        procMacro = {
+          enable = false,            -- disable macros (huge speed gain)
+        },
+        checkOnSave = {
+          command = "check",         -- fastest option
+        },
+      },
+    },
+  },
+}
+-- vim.lsp.config['rust_analyzer'] = {
+--   cmd = { 'rust-analyzer' },
+--   filetypes = { 'rust' },
+--   root_markers = { 'Cargo.toml', '.git' },
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+-- }
+-- vim.lsp.enable('rust_analyzer')
 
 ------------------------------------------------------------
 -- Autocompletion
@@ -157,7 +188,7 @@ cmp.setup({
 -- Treesitter Setup
 ------------------------------------------------------------
 require'nvim-treesitter'.setup {
-  ensure_installed = { "c", "cpp", "lua", "python", "perl", "rst" },
+  ensure_installed = { "c", "cpp", "lua", "python", "perl", "rst", "rust" },
   highlight = { enable = true },
 }
 
