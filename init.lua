@@ -138,20 +138,20 @@ vim.g.rustaceanvim = {
   server = {
     on_attach = on_attach,
     capabilities = capabilities,
-    settings = {
-      ["rust-analyzer"] = {
-        cargo = {
-          allFeatures = false,       -- reduce feature explosion
-          runBuildScripts = false,   -- skip build.rs
-        },
-        procMacro = {
-          enable = false,            -- disable macros (huge speed gain)
-        },
-        checkOnSave = {
-          command = "check",         -- fastest option
-        },
-      },
-    },
+--     settings = {
+--       ["rust-analyzer"] = {
+--         cargo = {
+--           allFeatures = false,       -- reduce feature explosion
+--           runBuildScripts = false,   -- skip build.rs
+--         },
+--         procMacro = {
+--           enable = false,            -- disable macros (huge speed gain)
+--         },
+--         checkOnSave = {
+--           command = "check",         -- fastest option
+--         },
+--       },
+--     },
   },
 }
 -- vim.lsp.config['rust_analyzer'] = {
