@@ -8,6 +8,14 @@ local config = {
 }
 
 
+wezterm.on("gui-startup", function(cmd)
+  local tab1, pane1, window = wezterm.mux.spawn_window(cmd or {})
+
+  pane1:activate()
+  window:gui_window():maximize()
+end)
+
+
 wezterm.on("toggle-tabbar", function(window, _)
     local overrides = window:get_config_overrides() or {}
     if overrides.enable_tab_bar == false then
