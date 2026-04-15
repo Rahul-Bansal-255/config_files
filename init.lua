@@ -307,6 +307,7 @@ require('telescope').setup({
 })
 vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>",   { noremap = true, silent = true })
 
 -- Diagnostics
 vim.keymap.set('n', '<leader>e', function()
