@@ -1,4 +1,6 @@
-# ANTIQUE
+# ======================================
+# 🎨 THEME (powerline + pastel segments)
+# ======================================
 
 #   format = """
 #   [](#6C4F3D)\
@@ -61,7 +63,9 @@
 #   format = '[  $time ]($style)'
 
 
-# GRAY-BLUE
+# =================================
+# 🎨 THEME (clean modern powerline)
+# =================================
 
 #   format = """
 #   [](#3B4252)\
@@ -121,7 +125,9 @@
 #   format = '[  $time ]($style)'
 
 
-# GRAY-BLUE-GREEN
+# =======================
+# 🎨 THEME (Minimal Neon)
+# =======================
 
 format = """
 [](#2E3440)\
