@@ -1,60 +1,122 @@
+# ANTIQUE
+
+#   format = """
+#   [](#6C4F3D)\
+#   $username$hostname\
+#   [](fg:#6C4F3D bg:#D88C9A)\
+#   $directory\
+#   [](fg:#D88C9A bg:#E0B07F)\
+#   $git_branch$git_status\
+#   [](fg:#E0B07F bg:#4A90E2)\
+#   $c$cpp\
+#   [](fg:#4A90E2 bg:#7EC49D)\
+#   $python\
+#   [](fg:#7EC49D bg:#9CA8B8)\
+#   $time\
+#   [](fg:#9CA8B8)
+#    [❯](fg:#2F855A) \
+#   """
+
+#   [username]
+#   show_always = true
+#   style_user = "bg:#6C4F3D fg:black"
+#   style_root = "bg:#6C4F3D fg:black"
+#   format = '[ $user ]($style)'
+
+#   [hostname]
+#   ssh_only = false
+#   style = "bg:#6C4F3D fg:black"
+#   format = '[ $hostname ]($style)'
+
+#   [directory]
+#   truncation_length = 3
+#   truncation_symbol = "…/"
+#   style = "bg:#D88C9A fg:black"
+#   format = "[  $path ]($style)"
+
+#   [git_branch]
+#   style = "bg:#E0B07F fg:black"
+#   format = '[  $branch ]($style)'
+
+#   [git_status]
+#   style = "bg:#E0B07F fg:black"
+#   format = '[$all_status$ahead_behind ]($style)'
+
+#   [c]
+#   style = "bg:#4A90E2 fg:black"
+#   format = '[  $version ]($style)'
+
+#   [cpp]
+#   style = "bg:#4A90E2 fg:black"
+#   format = '[  $version ]($style)'
+
+#   [python]
+#   style = "bg:#7EC49D fg:black"
+#   format = '[ (\($virtualenv\))  ($version) ]($style)'
+
+#   [time]
+#   disabled = false
+#   time_format = "%H:%M:%S"
+#   style = "bg:#9CA8B8 fg:black"
+#   format = '[  $time ]($style)'
+
+
+# GRAY-BLUE
+
 format = """
-[](#6C4F3D)\
+[](#3B4252)\
 $username$hostname\
-[](fg:#6C4F3D bg:#D88C9A)\
+[](fg:#3B4252 bg:#434C5E)\
 $directory\
-[](fg:#D88C9A bg:#E0B07F)\
+[](fg:#434C5E bg:#4C566A)\
 $git_branch$git_status\
-[](fg:#E0B07F bg:#4A90E2)\
-$c$cpp\
-[](fg:#4A90E2 bg:#7EC49D)\
-$python\
-[](fg:#7EC49D bg:#9CA8B8)\
+[](fg:#4C566A bg:#5E81AC)\
+$c$cpp$python\
+[](fg:#5E81AC bg:#88C0D0)\
 $time\
-[](fg:#9CA8B8)
- [❯](fg:#2F855A) \
-"""
+[](fg:#88C0D0)
+[❯](fg:#A3BE8C) """
 
 [username]
 show_always = true
-style_user = "bg:#6C4F3D fg:black"
-style_root = "bg:#6C4F3D fg:black"
+style_user = "bg:#3B4252 fg:#ECEFF4"
+style_root = "bg:#3B4252 fg:#BF616A"
 format = '[ $user ]($style)'
 
 [hostname]
 ssh_only = false
-style = "bg:#6C4F3D fg:black"
+style = "bg:#3B4252 fg:#D8DEE9"
 format = '[ $hostname ]($style)'
 
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
-style = "bg:#D88C9A fg:black"
+style = "bg:#434C5E fg:#ECEFF4"
 format = "[  $path ]($style)"
 
 [git_branch]
-style = "bg:#E0B07F fg:black"
+style = "bg:#4C566A fg:#E5E9F0"
 format = '[  $branch ]($style)'
 
 [git_status]
-style = "bg:#E0B07F fg:black"
+style = "bg:#4C566A fg:#EBCB8B"
 format = '[$all_status$ahead_behind ]($style)'
 
 [c]
-style = "bg:#4A90E2 fg:black"
+style = "bg:#5E81AC fg:#ECEFF4"
 format = '[  $version ]($style)'
 
 [cpp]
-style = "bg:#4A90E2 fg:black"
+style = "bg:#5E81AC fg:#ECEFF4"
 format = '[  $version ]($style)'
 
 [python]
-style = "bg:#7EC49D fg:black"
-format = '[ (\($virtualenv\))  ($version) ]($style)'
+style = "bg:#88C0D0 fg:#2E3440"
+format = '[  ($version) (\($virtualenv\)) ]($style)'
 
 [time]
 disabled = false
 time_format = "%H:%M:%S"
-style = "bg:#9CA8B8 fg:black"
+style = "bg:#88C0D0 fg:#2E3440"
 format = '[  $time ]($style)'
 
