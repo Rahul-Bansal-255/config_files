@@ -58,8 +58,6 @@ require("lazy").setup({
   { 'mrcjkb/rustaceanvim' },                               -- 🦀 Supercharge your Rust experience in Neovim!
 
   -- Syntax Highlighting
-  { 'nvim-treesitter/nvim-treesitter' },                   -- Nvim Treesitter configurations and abstraction layer
-  { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
   { "MTDL9/vim-log-highlighting", ft = { "log" } },        -- Syntax highlighting for generic log files in VIM
 
   -- UI & UX
@@ -183,27 +181,6 @@ cmp.setup({
   }),
   sources = { { name = 'nvim_lsp' } },
 })
-
-------------------------------------------------------------
--- Treesitter Setup
-------------------------------------------------------------
-require'nvim-treesitter'.setup {
-  ensure_installed = { "c", "cpp", "lua", "python", "perl", "rst", "rust" },
-  highlight = { enable = true },
-}
-
-require'treesitter-context'.setup{
-  enable = false,           -- Enable this plugin (Can be disabled for large files)
-  max_lines = 3,            -- How many lines the context window can span
-  trim_scope = 'inner',     -- 'inner' or 'outer'
-  mode = 'topline',         -- 'cursor', 'topline'
-  separator = nil,          -- e.g. nil or '─' to separate context and content
-  zindex = 3,               -- The Z-index of the context window
-}
-
-vim.keymap.set("n", "<leader>c", function()
-  require("treesitter-context").toggle()
-end, { noremap = true, silent = true })
 
 ------------------------------------------------------------
 -- Formatting Setup
