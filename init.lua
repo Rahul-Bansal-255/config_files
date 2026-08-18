@@ -35,6 +35,8 @@ vim.opt.foldenable = false
 
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 ------------------------------------------------------------
 -- Plugin Manager Bootstrap
@@ -69,6 +71,7 @@ require("lazy").setup({
   },                                                       -- A snazzy bufferline for Neovim
   { 'folke/which-key.nvim' },                              -- Show available keybindings in a popup as you type
   { 'windwp/nvim-autopairs' },                             -- Autopairs for neovim written in lua
+  { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
 
   -- Git
   { 'lewis6991/gitsigns.nvim' },                           -- Git integration for buffers
@@ -235,6 +238,16 @@ require('which-key').setup()
 require('gitsigns').setup({
     current_line_blame = true
 })
+require("treesitter-context").setup({
+  enable = false,
+  max_lines = 0,
+  min_window_height = 0,
+  line_numbers = true,
+  multiline_threshold = 15,
+  trim_scope = 'outer',
+  mode = 'cursor',
+  separator = nil,
+})
 
 ------------------------------------------------------------
 -- Key Mappings
@@ -285,7 +298,7 @@ require('telescope').setup({
 })
 vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>",   { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>", { noremap = true, silent = true })
 
 -- Diagnostics
 vim.keymap.set('n', '<leader>e', function()
@@ -301,5 +314,10 @@ vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>',   { noremap = true
 -- Renderer
 vim.keymap.set("n", "<leader>rmd", function()
   require("render-markdown").toggle()
+end,                                                            { noremap = true, silent = true })
+
+-- Treesitter Context
+vim.keymap.set("n", "<leader>c", function()
+    require("treesitter-context").toggle()
 end,                                                            { noremap = true, silent = true })
 
