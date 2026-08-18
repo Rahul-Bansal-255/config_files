@@ -38,6 +38,8 @@ vim.opt.cursorcolumn = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+local games = vim.env.GAMES ~= nil
+
 ------------------------------------------------------------
 -- Plugin Manager Bootstrap
 ------------------------------------------------------------
@@ -51,7 +53,7 @@ vim.opt.rtp:prepend(lazypath)
 ------------------------------------------------------------
 -- Plugin Setup
 ------------------------------------------------------------
-require("lazy").setup({
+local plugins = {
   -- LSP & Completion
   { 'neovim/nvim-lspconfig' },                             -- Quickstart configs for Nvim LSP
   { 'hrsh7th/nvim-cmp' },                                  -- A completion plugin for neovim coded in Lua
@@ -97,7 +99,15 @@ require("lazy").setup({
 
   -- Renderer
   { 'MeanderingProgrammer/render-markdown.nvim' },         -- Plugin to improve viewing Markdown files in Neovim
-})
+}
+
+if games then
+  table.insert(plugins, { 'seandewar/killersheep.nvim' })            -- Neovim port of killersheep (with blood!)
+  table.insert(plugins, { 'seandewar/nvimesweeper' })                -- Play Minesweeper in your favourite text editor
+  table.insert(plugins, { 'seandewar/actually-doom.nvim' })          -- Play DOOM in Neovim
+end
+
+require("lazy").setup(plugins)
 
 vim.cmd("colorscheme gruvbox")
 
@@ -322,4 +332,11 @@ end,                                                            { noremap = true
 vim.keymap.set("n", "<leader>c", function()
     require("treesitter-context").toggle()
 end,                                                            { noremap = true, silent = true })
+
+------------------------------------------------------------
+-- Games Configuration
+------------------------------------------------------------
+if games then
+  require("games")
+end
 
