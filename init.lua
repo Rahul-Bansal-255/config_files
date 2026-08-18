@@ -104,7 +104,7 @@ local plugins = {
 if games then
   table.insert(plugins, { 'seandewar/killersheep.nvim' })            -- Neovim port of killersheep (with blood!)
   table.insert(plugins, { 'seandewar/nvimesweeper' })                -- Play Minesweeper in your favourite text editor
-  table.insert(plugins, { 'seandewar/actually-doom.nvim' })          -- Play DOOM in Neovim
+  table.insert(plugins, { 'jim-fx/sudoku.nvim' })                    -- Sudoku Neovim
 end
 
 require("lazy").setup(plugins)
