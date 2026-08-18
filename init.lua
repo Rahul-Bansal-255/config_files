@@ -75,6 +75,7 @@ local plugins = {
   { 'windwp/nvim-autopairs' },                             -- Autopairs for neovim written in lua
   { 'nvim-treesitter/nvim-treesitter' },                   -- Nvim Treesitter configurations and abstraction layer
   { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
+  { 'andersevenrud/nvim_context_vt' },                     -- Virtual text context for neovim treesitter
 
   -- Git
   { 'lewis6991/gitsigns.nvim' },                           -- Git integration for buffers
@@ -260,6 +261,10 @@ require("treesitter-context").setup({
   mode = 'cursor',
   separator = nil,
 })
+require('nvim_context_vt').setup({
+  enabled = false,
+  disable_ft = { 'markdown' },
+})
 
 ------------------------------------------------------------
 -- Key Mappings
@@ -332,6 +337,9 @@ end,                                                            { noremap = true
 vim.keymap.set("n", "<leader>c", function()
     require("treesitter-context").toggle()
 end,                                                            { noremap = true, silent = true })
+
+-- Treesitter Virtual Text
+vim.keymap.set('n', '<leader>v', ':NvimContextVtToggle<CR>',    { noremap = true, silent = true })
 
 ------------------------------------------------------------
 -- Games Configuration
