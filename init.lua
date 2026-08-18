@@ -71,6 +71,7 @@ require("lazy").setup({
   },                                                       -- A snazzy bufferline for Neovim
   { 'folke/which-key.nvim' },                              -- Show available keybindings in a popup as you type
   { 'windwp/nvim-autopairs' },                             -- Autopairs for neovim written in lua
+  { 'nvim-treesitter/nvim-treesitter' },                   -- Nvim Treesitter configurations and abstraction layer
   { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
 
   -- Git
