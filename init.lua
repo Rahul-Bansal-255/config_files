@@ -119,13 +119,12 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Shared `on_attach` logic
 local on_attach = function(_, bufnr)
-  local opts = { noremap = true, silent = true, buffer = bufnr }
-  vim.keymap.set('n', "<leader>d", vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', "<leader>j", vim.lsp.buf.definition, opts)
+  vim.keymap.set('n', "<leader>d", vim.lsp.buf.hover,       { noremap = true, silent = true, buffer = bufnr, desc = "Show documentation float" })
+  vim.keymap.set('n', "<leader>j", vim.lsp.buf.definition,  { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition" })
   vim.keymap.set('n', '<leader>J', function()
     vim.cmd('tab split')
     vim.lsp.buf.definition()
-  end, opts)
+  end,                                                      { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition in new tab" })
 end
 
 -- C/C++ setup
@@ -207,7 +206,7 @@ require('formatter').setup({
     cpp = { function() return { exe = "clang-format", args = {}, stdin = true } end }
   }
 })
-vim.keymap.set("n", "<leader>F", ":Format<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>F", ":Format<CR>", { noremap = true, silent = true, desc = "Format file" })
 
 ------------------------------------------------------------
 -- UI Enhancements
@@ -273,26 +272,26 @@ require('nvim_context_vt').setup({
 for i = 0, 9 do
   vim.keymap.set('n', '<leader>t' .. i, function()
     vim.cmd('tabnext ' .. i+1)
-  end, { noremap = true, silent = true })
+  end, { noremap = true, silent = true, desc = "Go to tab " .. (i) })
 end
-vim.keymap.set('n', '<leader>tc', ':tabnew<CR>',     { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>tx', ':tabclose<CR>',   { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>tl', ':tabnext<CR>',    { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>th', ':tabprev<CR>',    { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>tH', ':tabmove -1<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>tL', ':tabmove +1<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tc', ':tabnew<CR>',     { noremap = true, silent = true, desc = "Create new tab" })
+vim.keymap.set('n', '<leader>tx', ':tabclose<CR>',   { noremap = true, silent = true, desc = "Close current tab" })
+vim.keymap.set('n', '<leader>tl', ':tabnext<CR>',    { noremap = true, silent = true, desc = "Go to next tab" })
+vim.keymap.set('n', '<leader>th', ':tabprev<CR>',    { noremap = true, silent = true, desc = "Go to previous tab" })
+vim.keymap.set('n', '<leader>tH', ':tabmove -1<CR>', { noremap = true, silent = true, desc = "Move tab left" })
+vim.keymap.set('n', '<leader>tL', ':tabmove +1<CR>', { noremap = true, silent = true, desc = "Move tab right" })
 
 -- Directional window navigation
-vim.keymap.set('n', '<leader>wh', '<C-w>h', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>wj', '<C-w>j', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>wk', '<C-w>k', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>wl', '<C-w>l', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>wh', '<C-w>h', { noremap = true, silent = true, desc = "Move to left window" })
+vim.keymap.set('n', '<leader>wj', '<C-w>j', { noremap = true, silent = true, desc = "Move to window below" })
+vim.keymap.set('n', '<leader>wk', '<C-w>k', { noremap = true, silent = true, desc = "Move to window above" })
+vim.keymap.set('n', '<leader>wl', '<C-w>l', { noremap = true, silent = true, desc = "Move to right window" })
 
 -- File Explorer
-vim.keymap.set('n', '<leader>nn', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>nn', ':NvimTreeToggle<CR>', { noremap = true, silent = true, desc = "Toggle file explorer" })
 vim.keymap.set('n', '<leader>nj', function()
   require("nvim-tree.api").tree.find_file({ open = true, focus = true })
-end,                                                     { noremap = true, silent = true })
+end,                                                     { noremap = true, silent = true, desc = "Reveal current file in explorer" })
 
 -- Search
 require('telescope').setup({
@@ -313,38 +312,38 @@ require('telescope').setup({
     },
   },
 })
-vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>", { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true, desc = "Find files" })
+vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true, desc = "Live grep" })
+vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>", { noremap = true, silent = true, desc = "Show diagnostics" })
 require("rip-substitute").setup({})
 vim.keymap.set( { "n", "x" }, "<leader>fs",
   function()
     require("rip-substitute").sub()
-  end,                                                          { noremap = true, silent = true })
+  end,                                                          { noremap = true, silent = true, desc = "Search and replace" })
 
 -- Diagnostics
 vim.keymap.set('n', '<leader>e', function()
   vim.diagnostic.open_float(nil, { focus = false })
-end,                                                            { noremap = true, silent = true })
+end,                                                            { noremap = true, silent = true, desc = "Show diagnostics float" })
 
 -- Git Integration
-vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>",   { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>',          { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>",   { noremap = true, silent = true, desc = "Git blame current line" })
+vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>',          { noremap = true, silent = true, desc = "Open diff view" })
+vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true, desc = "Show current file git history" })
+vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true, desc = "Show repo git history" })
 
 -- Renderer
 vim.keymap.set("n", "<leader>rmd", function()
   require("render-markdown").toggle()
-end,                                                            { noremap = true, silent = true })
+end,                                                            { noremap = true, silent = true, desc = "Toggle markdown rendering" })
 
 -- Treesitter Context
 vim.keymap.set("n", "<leader>c", function()
     require("treesitter-context").toggle()
-end,                                                            { noremap = true, silent = true })
+end,                                                            { noremap = true, silent = true, desc = "Toggle context" })
 
 -- Treesitter Virtual Text
-vim.keymap.set('n', '<leader>v', ':NvimContextVtToggle<CR>',    { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>v', ':NvimContextVtToggle<CR>',    { noremap = true, silent = true, desc = "Toggle virtual text" })
 
 ------------------------------------------------------------
 -- Games Configuration
