@@ -239,6 +239,7 @@ require('which-key').setup()
 require('gitsigns').setup({
     current_line_blame = true
 })
+require("nvim-treesitter").install({ "c", "python", "rust" })
 require("treesitter-context").setup({
   enable = false,
   max_lines = 0,
