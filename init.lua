@@ -85,11 +85,12 @@ local plugins = {
       dependencies = 'nvim-lua/plenary.nvim',
   },                                                       -- Single tabpage interface for easily cycling through diffs
 
-  -- Telescope
+  -- Search
   {
       'nvim-telescope/telescope.nvim',
       dependencies = 'nvim-lua/plenary.nvim',
   },                                                       -- Fuzzy finder
+  { "chrisgrieser/nvim-rip-substitute" },                  -- Search & replace
 
   -- Theme
   { 'morhetz/gruvbox' , name = 'gruvbox' },                -- Retro groove color scheme for Vim
@@ -294,7 +295,7 @@ vim.keymap.set('n', '<leader>nj', function()
   require("nvim-tree.api").tree.find_file({ open = true, focus = true })
 end,                                                     { noremap = true, silent = true })
 
--- Telescope
+-- Search
 require('telescope').setup({
   defaults = {
     layout_strategy = "vertical",
@@ -316,6 +317,11 @@ require('telescope').setup({
 vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>", { noremap = true, silent = true })
+require("rip-substitute").setup({})
+vim.keymap.set( { "n", "x" }, "<leader>fs",
+  function()
+    require("rip-substitute").sub()
+  end,                                                          { noremap = true, silent = true })
 
 -- Diagnostics
 vim.keymap.set('n', '<leader>e', function()
