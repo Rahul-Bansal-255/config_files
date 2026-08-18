@@ -44,7 +44,7 @@ local games = vim.env.GAMES ~= nil
 -- Plugin Manager Bootstrap
 ------------------------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({ "git", "clone", "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
 end
@@ -73,7 +73,10 @@ local plugins = {
   },                                                       -- A snazzy bufferline for Neovim
   { 'folke/which-key.nvim' },                              -- Show available keybindings in a popup as you type
   { 'windwp/nvim-autopairs' },                             -- Autopairs for neovim written in lua
-  { 'nvim-treesitter/nvim-treesitter' },                   -- Nvim Treesitter configurations and abstraction layer
+  {
+      'nvim-treesitter/nvim-treesitter',
+      build = ':TSUpdate'
+  },                                                       -- Nvim Treesitter configurations and abstraction layer
   { 'nvim-treesitter/nvim-treesitter-context' },           -- Show code context
   { 'andersevenrud/nvim_context_vt' },                     -- Virtual text context for neovim treesitter
 
@@ -125,6 +128,9 @@ local on_attach = function(_, bufnr)
     vim.cmd('tab split')
     vim.lsp.buf.definition()
   end,                                                      { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition in new tab" })
+  vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename,        { noremap = true, silent = true, buffer = bufnr, desc = "Rename symbol" })
+  vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action,   { noremap = true, silent = true, buffer = bufnr, desc = "Code action" })
+  vim.keymap.set('n', '<leader>lR', vim.lsp.buf.references,    { noremap = true, silent = true, buffer = bufnr, desc = "Show references" })
 end
 
 -- C/C++ setup
@@ -181,6 +187,8 @@ vim.g.rustaceanvim = {
 local cmp = require('cmp')
 require('luasnip.loaders.from_vscode').lazy_load()
 require('nvim-autopairs').setup {}
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 cmp.setup({
   snippet = {
@@ -249,7 +257,11 @@ require('which-key').setup()
 require('gitsigns').setup({
     current_line_blame = true
 })
-require("nvim-treesitter").install({ "c", "python", "rust" })
+require("nvim-treesitter.config").setup({
+  ensure_installed = { "c", "cpp", "python", "rust" },
+  highlight = { enable = true },
+  indent = { enable = true },
+})
 require("treesitter-context").setup({
   enable = false,
   max_lines = 0,
@@ -264,6 +276,7 @@ require('nvim_context_vt').setup({
   enabled = false,
   disable_ft = { 'markdown' },
 })
+require('render-markdown').setup({})
 
 ------------------------------------------------------------
 -- Key Mappings
