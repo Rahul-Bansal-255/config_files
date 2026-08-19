@@ -30,8 +30,10 @@ vim.diagnostic.config({
   severity_sort = true,
 })
 
-vim.opt.foldmethod = "indent"
-vim.opt.foldenable = false
+vim.o.foldcolumn = '0'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
 
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
@@ -94,6 +96,10 @@ local plugins = {
       dependencies = 'nvim-lua/plenary.nvim',
   },                                                       -- Fuzzy finder
   { "chrisgrieser/nvim-rip-substitute" },                  -- Search & replace
+  {
+      'kevinhwang91/nvim-ufo',
+      dependencies = 'kevinhwang91/promise-async'
+  },                                                       -- Not UFO in the sky, but an ultra fold in Neovim.
 
   -- Theme
   { 'morhetz/gruvbox' , name = 'gruvbox' },                -- Retro groove color scheme for Vim
@@ -333,6 +339,14 @@ vim.keymap.set( { "n", "x" }, "<leader>fs",
   function()
     require("rip-substitute").sub()
   end,                                                          { noremap = true, silent = true, desc = "Search and replace" })
+require('ufo').setup({
+    provider_selector = function(bufnr, filetype, buftype)
+        return {'treesitter', 'indent'}
+    end
+})
+vim.keymap.set('n', 'zR', require('ufo').openAllFolds, { desc = 'Open all folds' })
+vim.keymap.set('n', 'zM', require('ufo').closeAllFolds, { desc = 'Close all folds' })
+vim.keymap.set('n', 'zp', require('ufo').peekFoldedLinesUnderCursor, { desc = 'Peek fold' })
 
 -- Diagnostics
 vim.keymap.set('n', '<leader>e', function()
