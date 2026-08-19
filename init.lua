@@ -106,7 +106,7 @@ local plugins = {
   { 'rose-pine/neovim', name = 'rose-pine' },              -- Soho vibes for Neovim
 
   -- Formatter & Debugger
-  { 'mhartington/formatter.nvim' },                        -- Formatter
+  { "stevearc/conform.nvim" },                             -- Lightweight yet powerful formatter plugin for Neovim
 
   -- Renderer
   { 'MeanderingProgrammer/render-markdown.nvim' },         -- Plugin to improve viewing Markdown files in Neovim
@@ -214,13 +214,20 @@ cmp.setup({
 ------------------------------------------------------------
 -- Formatting Setup
 ------------------------------------------------------------
-require('formatter').setup({
-  filetype = {
-    c = { function() return { exe = "clang-format", args = {}, stdin = true } end },
-    cpp = { function() return { exe = "clang-format", args = {}, stdin = true } end }
-  }
+require("conform").setup({
+  formatters_by_ft = {
+    c = { "clang_format" },
+    cpp = { "clang_format" },
+    rust = { "rustfmt" },
+  },
 })
-vim.keymap.set("n", "<leader>F", ":Format<CR>", { noremap = true, silent = true, desc = "Format file" })
+vim.keymap.set({ "n", "v" }, "<leader>F", function()
+  require("conform").format({
+    lsp_format = "fallback",
+    async = false,
+    timeout_ms = 3000,
+  })
+end, { desc = "Format file" })
 
 ------------------------------------------------------------
 -- UI Enhancements
