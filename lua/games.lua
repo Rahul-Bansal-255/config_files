@@ -1,4 +1,3 @@
-
 -- killersheep (:KillKillKill)
 require("killersheep").setup {
   gore = true,           -- Enables/disables blood and gore.

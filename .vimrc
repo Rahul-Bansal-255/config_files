@@ -89,3 +89,4 @@ set cursorline
 
 " Highlight cursor line underneath the cursor vertically.
 set cursorcolumn
+
