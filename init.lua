@@ -198,7 +198,7 @@ require("conform").setup({
     cpp = { "clang_format" },
     python = { "black" },
     rust = { "rustfmt" },
-    bash = { "shfmt" },
+    bash = { "beautysh" },
   },
 })
 vim.keymap.set({ "n", "v" }, "<leader>F", function()

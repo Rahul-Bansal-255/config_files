@@ -41,20 +41,21 @@ Commands (can be chained in a single invocation):
   all                      Shorthand for: install all && configure all
   help                     Show this help message
 
-Install components (uses dnf for tmux/vim/git/python/ripgrep/clangd/pylsp/black/shfmt/devtools, upstream installers for neovim/starship/rust):
+Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, upstream installers for neovim/starship/rust):
+  epel                  Install the EPEL repository via dnf
+  devtools              Install the "Development Tools" package group via dnf
   tmux                  Install tmux via dnf
   vim                   Install vim via dnf
   git                   Install git via dnf
   python                Install python3 via dnf
+  black                 Install black (Python formatter) via pip
+  pylsp                 Install pylsp (python-lsp-server) via pip
+  beautysh              Install beautysh (Bash formatter) via pip
   ripgrep               Install ripgrep via dnf
+  clangd                Install clangd + clang-format via dnf (clang-tools-extra)
+  rust                  Install build deps via dnf, then rust via rustup, plus rustfmt/rust-analyzer components
   neovim                Install neovim from the pre-built release archive
   starship              Install starship via the official install script
-  rust                  Install build deps via dnf, then rust via rustup, plus rustfmt/rust-analyzer components
-  clangd                Install clangd + clang-format via dnf (clang-tools-extra)
-  pylsp                 Install pylsp (python-lsp-server) via dnf
-  black                 Install black (Python formatter) via dnf
-  shfmt                 Install shfmt (Bash formatter) via dnf
-  devtools              Install the "Development Tools" package group via dnf
   all                   Install all of the components above (not wezterm, which is configure-only)
 
 Configure components (symlinks dotfiles from this repo into \$HOME):
@@ -94,9 +95,26 @@ append_once() {
   fi
 }
 
+pip_install() {
+  local package="$1"
+  sudo dnf install -y python3-pip
+  # Newer Fedora/RHEL pip refuses system-wide installs with
+  # "externally-managed-environment" (PEP 668); fall back to overriding it.
+  sudo pip3 install --break-system-packages "$package" 2>/dev/null ||
+    sudo pip3 install "$package"
+}
+
 install() {
   local component="$1"
   case "$component" in
+    epel)
+      echo "Installing EPEL via dnf..."
+      sudo dnf install -y epel-release
+      ;;
+    devtools)
+      echo "Installing Development Tools group via dnf..."
+      sudo dnf groupinstall -y "Development Tools"
+      ;;
     tmux)
       echo "Installing tmux via dnf..."
       sudo dnf install -y tmux
@@ -113,9 +131,25 @@ install() {
       echo "Installing python3 via dnf..."
       sudo dnf install -y python3
       ;;
+    black)
+      echo "Installing black via pip..."
+      pip_install black
+      ;;
+    pylsp)
+      echo "Installing pylsp (python-lsp-server) via pip..."
+      pip_install python-lsp-server
+      ;;
+    beautysh)
+      echo "Installing beautysh via pip..."
+      pip_install beautysh
+      ;;
     ripgrep)
       echo "Installing ripgrep via dnf..."
       sudo dnf install -y ripgrep
+      ;;
+    clangd)
+      echo "Installing clangd + clang-format via dnf..."
+      sudo dnf install -y clang-tools-extra
       ;;
     rust)
       echo "Installing rust build dependencies via dnf..."
@@ -127,26 +161,6 @@ install() {
       source "$HOME/.cargo/env"
       echo "Installing rustfmt and rust-analyzer components via rustup..."
       rustup component add rustfmt rust-analyzer
-      ;;
-    clangd)
-      echo "Installing clangd + clang-format via dnf..."
-      sudo dnf install -y clang-tools-extra
-      ;;
-    pylsp)
-      echo "Installing pylsp (python-lsp-server) via dnf..."
-      sudo dnf install -y python3-lsp-server
-      ;;
-    black)
-      echo "Installing black via dnf..."
-      sudo dnf install -y python3-black
-      ;;
-    shfmt)
-      echo "Installing shfmt via dnf..."
-      sudo dnf install -y shfmt
-      ;;
-    devtools)
-      echo "Installing Development Tools group via dnf..."
-      sudo dnf groupinstall -y "Development Tools"
       ;;
     neovim)
       echo "Installing neovim from pre-built archive..."
@@ -164,19 +178,20 @@ install() {
       append_once 'eval "$(starship init bash)"' "$BASHRC"
       ;;
     all)
+      install epel
+      install devtools
       install tmux
       install vim
       install git
       install python
+      install black
+      install pylsp
+      install beautysh
       install ripgrep
+      install clangd
       install rust
       install neovim
       install starship
-      install clangd
-      install pylsp
-      install black
-      install shfmt
-      install devtools
       ;;
     *)
       echo "Unknown install component: $component" >&2
