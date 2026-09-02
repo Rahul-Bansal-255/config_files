@@ -41,7 +41,7 @@ Commands (can be chained in a single invocation):
   all                      Shorthand for: install all && configure all
   help                     Show this help message
 
-Install components (uses dnf for tmux/vim/git/python/ripgrep, upstream installers for neovim/starship/rust):
+Install components (uses dnf for tmux/vim/git/python/ripgrep/clangd/pylsp/black/shfmt, upstream installers for neovim/starship/rust):
   tmux                  Install tmux via dnf
   vim                   Install vim via dnf
   git                   Install git via dnf
@@ -49,7 +49,11 @@ Install components (uses dnf for tmux/vim/git/python/ripgrep, upstream installer
   ripgrep               Install ripgrep via dnf
   neovim                Install neovim from the pre-built release archive
   starship              Install starship via the official install script
-  rust                  Install build deps via dnf, then rust via rustup
+  rust                  Install build deps via dnf, then rust via rustup, plus rustfmt/rust-analyzer components
+  clangd                Install clangd + clang-format via dnf (clang-tools-extra)
+  pylsp                 Install pylsp (python-lsp-server) via dnf
+  black                 Install black (Python formatter) via dnf
+  shfmt                 Install shfmt (Bash formatter) via dnf
   all                   Install all of the components above (not wezterm, which is configure-only)
 
 Configure components (symlinks dotfiles from this repo into \$HOME):
@@ -118,6 +122,26 @@ install() {
       echo "Installing rust via rustup..."
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       append_once 'source "$HOME/.cargo/env"' "$BASHRC"
+      # shellcheck disable=SC1091
+      source "$HOME/.cargo/env"
+      echo "Installing rustfmt and rust-analyzer components via rustup..."
+      rustup component add rustfmt rust-analyzer
+      ;;
+    clangd)
+      echo "Installing clangd + clang-format via dnf..."
+      sudo dnf install -y clang-tools-extra
+      ;;
+    pylsp)
+      echo "Installing pylsp (python-lsp-server) via dnf..."
+      sudo dnf install -y python3-lsp-server
+      ;;
+    black)
+      echo "Installing black via dnf..."
+      sudo dnf install -y python3-black
+      ;;
+    shfmt)
+      echo "Installing shfmt via dnf..."
+      sudo dnf install -y shfmt
       ;;
     neovim)
       echo "Installing neovim from pre-built archive..."
@@ -143,6 +167,10 @@ install() {
       install rust
       install neovim
       install starship
+      install clangd
+      install pylsp
+      install black
+      install shfmt
       ;;
     *)
       echo "Unknown install component: $component" >&2
