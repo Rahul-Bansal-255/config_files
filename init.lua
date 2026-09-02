@@ -1,4 +1,4 @@
--- Neovim Configuration for C/C++ Development
+-- Neovim Configuration for Systems Programming
 -- Save this file as `~/.config/nvim/init.lua`
 
 ------------------------------------------------------------
@@ -128,12 +128,12 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Shared `on_attach` logic
 local on_attach = function(_, bufnr)
-  vim.keymap.set('n', "<leader>d", vim.lsp.buf.hover,       { noremap = true, silent = true, buffer = bufnr, desc = "Show documentation float" })
-  vim.keymap.set('n', "<leader>j", vim.lsp.buf.definition,  { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition" })
+  vim.keymap.set('n', "<leader>d", vim.lsp.buf.hover,          { noremap = true, silent = true, buffer = bufnr, desc = "Show documentation float" })
+  vim.keymap.set('n', "<leader>j", vim.lsp.buf.definition,     { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition" })
   vim.keymap.set('n', '<leader>J', function()
     vim.cmd('tab split')
     vim.lsp.buf.definition()
-  end,                                                      { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition in new tab" })
+  end,                                                         { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition in new tab" })
   vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename,        { noremap = true, silent = true, buffer = bufnr, desc = "Rename symbol" })
   vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action,   { noremap = true, silent = true, buffer = bufnr, desc = "Code action" })
   vim.keymap.set('n', '<leader>lR', vim.lsp.buf.references,    { noremap = true, silent = true, buffer = bufnr, desc = "Show references" })
@@ -162,30 +162,8 @@ vim.g.rustaceanvim = {
   server = {
     on_attach = on_attach,
     capabilities = capabilities,
---     settings = {
---       ["rust-analyzer"] = {
---         cargo = {
---           allFeatures = false,       -- reduce feature explosion
---           runBuildScripts = false,   -- skip build.rs
---         },
---         procMacro = {
---           enable = false,            -- disable macros (huge speed gain)
---         },
---         checkOnSave = {
---           command = "check",         -- fastest option
---         },
---       },
---     },
   },
 }
--- vim.lsp.config['rust_analyzer'] = {
---   cmd = { 'rust-analyzer' },
---   filetypes = { 'rust' },
---   root_markers = { 'Cargo.toml', '.git' },
---   on_attach = on_attach,
---   capabilities = capabilities,
--- }
--- vim.lsp.enable('rust_analyzer')
 
 ------------------------------------------------------------
 -- Autocompletion
@@ -218,7 +196,9 @@ require("conform").setup({
   formatters_by_ft = {
     c = { "clang_format" },
     cpp = { "clang_format" },
+    python = { "black" },
     rust = { "rustfmt" },
+    bash = { "shfmt" },
   },
 })
 vim.keymap.set({ "n", "v" }, "<leader>F", function()
@@ -271,7 +251,7 @@ require('gitsigns').setup({
     current_line_blame = true
 })
 require("nvim-treesitter.config").setup({
-  ensure_installed = { "c", "cpp", "python", "rust" },
+  ensure_installed = { "c", "cpp", "python", "rust", "bash" },
   highlight = { enable = true },
   indent = { enable = true },
 })
