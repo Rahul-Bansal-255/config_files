@@ -41,7 +41,7 @@ Commands (can be chained in a single invocation):
   all                      Shorthand for: install all && configure all
   help                     Show this help message
 
-Install components (uses dnf for tmux/vim/git/python/ripgrep/clangd/pylsp/black/shfmt, upstream installers for neovim/starship/rust):
+Install components (uses dnf for tmux/vim/git/python/ripgrep/clangd/pylsp/black/shfmt/devtools, upstream installers for neovim/starship/rust):
   tmux                  Install tmux via dnf
   vim                   Install vim via dnf
   git                   Install git via dnf
@@ -54,6 +54,7 @@ Install components (uses dnf for tmux/vim/git/python/ripgrep/clangd/pylsp/black/
   pylsp                 Install pylsp (python-lsp-server) via dnf
   black                 Install black (Python formatter) via dnf
   shfmt                 Install shfmt (Bash formatter) via dnf
+  devtools              Install the "Development Tools" package group via dnf
   all                   Install all of the components above (not wezterm, which is configure-only)
 
 Configure components (symlinks dotfiles from this repo into \$HOME):
@@ -143,6 +144,10 @@ install() {
       echo "Installing shfmt via dnf..."
       sudo dnf install -y shfmt
       ;;
+    devtools)
+      echo "Installing Development Tools group via dnf..."
+      sudo dnf groupinstall -y "Development Tools"
+      ;;
     neovim)
       echo "Installing neovim from pre-built archive..."
       local tmp_dir
@@ -171,6 +176,7 @@ install() {
       install pylsp
       install black
       install shfmt
+      install devtools
       ;;
     *)
       echo "Unknown install component: $component" >&2
