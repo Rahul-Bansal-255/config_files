@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -220,8 +220,11 @@ configure() {
             ;;
         tmux)
             safe_link "$TMUX_CONFIG_FILE_SRC" "$TMUX_CONFIG_FILE_DEST"
-            if command -v tmux >/dev/null 2>&1 && [ -n "${TMUX:-}" ]; then
-                tmux source "$TMUX_CONFIG_FILE_DEST"
+            # Reload the config against the running tmux server, whether or not
+            # we are currently inside a tmux session. tmux has-session succeeds
+            # only when a server is up, avoiding spawning one just to reload.
+            if command -v tmux >/dev/null 2>&1 && tmux has-session 2>/dev/null; then
+                tmux source-file "$TMUX_CONFIG_FILE_DEST"
             fi
             ;;
         wezterm)
