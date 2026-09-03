@@ -26,8 +26,12 @@ NVIM_SUB_CONFIG_DEST="$NVIM_CONFIG_PATH_DEST/$NVIM_SUB_CONFIG"
 STARSHIP_CONFIG_PATH_DEST="$HOME/.config"
 STARSHIP_CONFIG_FILE_DEST="$STARSHIP_CONFIG_PATH_DEST/$STARSHIP_CONFIG"
 
-NVIM_INSTALL_DIR="/opt/nvim-linux-x86_64"
-NVIM_ARCHIVE="nvim-linux-x86_64.tar.gz"
+case "$(uname -m)" in
+    aarch64 | arm64) NVIM_ARCH="arm64" ;;
+    *) NVIM_ARCH="x86_64" ;;
+esac
+NVIM_INSTALL_DIR="/opt/nvim-linux-${NVIM_ARCH}"
+NVIM_ARCHIVE="nvim-linux-${NVIM_ARCH}.tar.gz"
 NVIM_DOWNLOAD_URL="https://github.com/neovim/neovim/releases/latest/download/${NVIM_ARCHIVE}"
 BASHRC="$HOME/.bashrc"
 
