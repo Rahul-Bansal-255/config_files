@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -111,8 +111,12 @@ pip_install() {
 reload_bashrc() {
     if [ -f "$BASHRC" ]; then
         echo "Reloading $BASHRC..."
+        # An interactive .bashrc may reference unbound variables (e.g. PS1),
+        # which would abort the script under nounset; relax it just here.
+        set +u
         # shellcheck disable=SC1090
         source "$BASHRC" || true
+        set -u
     fi
 }
 
