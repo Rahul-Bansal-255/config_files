@@ -33,6 +33,8 @@ esac
 NVIM_INSTALL_DIR="/opt/nvim-linux-${NVIM_ARCH}"
 NVIM_ARCHIVE="nvim-linux-${NVIM_ARCH}.tar.gz"
 NVIM_DOWNLOAD_URL="https://github.com/neovim/neovim/releases/latest/download/${NVIM_ARCHIVE}"
+BEAR_VERSION="4.2.2"
+BEAR_PREFIX="/usr/local"
 BASHRC="$HOME/.bashrc"
 
 usage() {
@@ -45,7 +47,7 @@ Commands (can be chained in a single invocation):
   all                      Shorthand for: install all && configure all
   help                     Show this help message
 
-Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, upstream installers for neovim/starship/rust):
+Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, upstream installers for neovim/starship/rust, build-from-source for bear):
   epel                  Install the EPEL repository via dnf
   devtools              Install the "Development Tools" package group via dnf
   tmux                  Install tmux via dnf
@@ -58,6 +60,7 @@ Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtool
   ripgrep               Install ripgrep via dnf
   clangd                Install clangd + clang-format via dnf (clang-tools-extra)
   rust                  Install build deps via dnf, then rust via rustup, plus rustfmt/rust-analyzer components
+  bear                  Install bear ${BEAR_VERSION} from source into ${BEAR_PREFIX} (requires rust, git and a C compiler)
   neovim                Install neovim from the pre-built release archive
   starship              Install starship via the official install script
   all                   Install all of the components above (not wezterm, which is configure-only)
@@ -177,6 +180,29 @@ install() {
             echo "Installing rustfmt and rust-analyzer components via rustup..."
             rustup component add rustfmt rust-analyzer
             ;;
+        bear)
+            echo "Installing bear from source..."
+            if ! command -v cargo >/dev/null 2>&1; then
+                echo "Error: cargo not found; install the 'rust' component first." >&2
+                exit 1
+            fi
+            if ! command -v git >/dev/null 2>&1; then
+                echo "Error: git not found; install the 'git' component first." >&2
+                exit 1
+            fi
+            local bear_tmp
+            bear_tmp=$(mktemp -d)
+            # Build in a subshell.
+            (
+                cd "$bear_tmp"
+                git clone --depth 1 --branch "$BEAR_VERSION" https://github.com/rizsotto/Bear.git
+                cd Bear
+                cargo build --release
+                target/release/generate-completions target/release/completions
+                sudo PREFIX="$BEAR_PREFIX" ./scripts/install.sh
+            )
+            rm -rf "$bear_tmp"
+            ;;
         neovim)
             echo "Installing neovim from pre-built archive..."
             local tmp_dir
@@ -205,6 +231,7 @@ install() {
             install ripgrep
             install clangd
             install rust
+            install bear
             install neovim
             install starship
             ;;
