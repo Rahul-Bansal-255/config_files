@@ -157,6 +157,20 @@ vim.lsp.config['pylsp'] = {
 }
 vim.lsp.enable('pylsp')
 
+-- TypeScript / JavaScript setup
+vim.lsp.config['ts_ls'] = {
+  cmd = { 'typescript-language-server', '--stdio' },
+  filetypes = {
+    'javascript',
+    'javascriptreact',
+    'typescript',
+    'typescriptreact',
+  },
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+vim.lsp.enable('ts_ls')
+
 -- Rust setup
 vim.g.rustaceanvim = {
   server = {
@@ -199,6 +213,11 @@ require("conform").setup({
     python = { "black" },
     rust = { "rustfmt" },
     sh = { "beautysh" },
+    javascript = { "prettier" },
+    javascriptreact = { "prettier" },
+    typescript = { "prettier" },
+    typescriptreact = { "prettier" },
+    json = { "prettier" },
   },
 })
 vim.keymap.set({ "n", "v" }, "<leader>F", function()
@@ -251,7 +270,7 @@ require('gitsigns').setup({
     current_line_blame = true
 })
 require("nvim-treesitter.config").setup({
-  ensure_installed = { "c", "cpp", "python", "rust", "bash" },
+  ensure_installed = { "c", "cpp", "python", "rust", "bash", "javascript", "typescript", "tsx", "json" },
   highlight = { enable = true },
   indent = { enable = true },
 })
