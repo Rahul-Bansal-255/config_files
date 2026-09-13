@@ -63,6 +63,7 @@ Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtool
   bear                  Install bear ${BEAR_VERSION} from source into ${BEAR_PREFIX} (requires rust, git and a C compiler)
   neovim                Install neovim from the pre-built release archive
   starship              Install starship via the official install script
+  typescript            Install typescript, typescript-language-server, and prettier via npm
   all                   Install all of the components above (not wezterm, which is configure-only)
 
 Configure components (symlinks dotfiles from this repo into \$HOME):
@@ -218,6 +219,10 @@ install() {
             curl -fsS https://starship.rs/install.sh | sh -s -- -y
             append_once 'eval "$(starship init bash)"' "$BASHRC"
             ;;
+        typescript)
+            echo "Installing typescript tools via npm..."
+            sudo npm install -g typescript typescript-language-server prettier
+            ;;
         all)
             install epel
             install devtools
@@ -234,6 +239,7 @@ install() {
             install bear
             install neovim
             install starship
+            install typescript
             ;;
         *)
             echo "Unknown install component: $component" >&2
