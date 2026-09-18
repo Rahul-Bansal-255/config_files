@@ -288,6 +288,7 @@ configure() {
             ;;
         wezterm)
             safe_link "$WEZTERM_CONFIG_FILE_SRC" "$WEZTERM_CONFIG_FILE_DEST"
+            append_once 'export CLICOLOR=1' "$BASHRC"
             ;;
         neovim)
             safe_link "$NVIM_CONFIG_FILE_SRC" "$NVIM_CONFIG_FILE_DEST"
