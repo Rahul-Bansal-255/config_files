@@ -47,7 +47,7 @@ Commands (can be chained in a single invocation):
   all                      Shorthand for: install all && configure all
   help                     Show this help message
 
-Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, upstream installers for neovim/starship/rust, build-from-source for bear):
+Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, npm for bashls/typescript, nvm for nodejs, upstream installers for neovim/starship/rust, build-from-source for bear):
   epel                  Install the EPEL repository via dnf
   devtools              Install the "Development Tools" package group via dnf
   tmux                  Install tmux via dnf
@@ -57,13 +57,14 @@ Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtool
   black                 Install black (Python formatter) via pip
   pylsp                 Install pylsp (python-lsp-server) via pip
   beautysh              Install beautysh (Bash formatter) via pip
-  bashls                Install bash-language-server via npm and shellcheck via dnf
   ripgrep               Install ripgrep via dnf
   clangd                Install clangd + clang-format via dnf (clang-tools-extra)
   rust                  Install build deps via dnf, then rust via rustup, plus rustfmt/rust-analyzer components
   bear                  Install bear ${BEAR_VERSION} from source into ${BEAR_PREFIX} (requires rust, git and a C compiler)
   neovim                Install neovim from the pre-built release archive
   starship              Install starship via the official install script
+  nodejs                Install Node.js (v24) and npm via nvm
+  bashls                Install bash-language-server via npm and shellcheck via dnf
   typescript            Install typescript, typescript-language-server, and prettier via npm
   all                   Install all of the components above (not wezterm, which is configure-only)
 
@@ -164,12 +165,6 @@ install() {
             echo "Installing beautysh via pip..."
             pip_install beautysh
             ;;
-        bashls)
-            echo "Installing bash-language-server via npm..."
-            sudo npm install -g bash-language-server
-            echo "Installing shellcheck via dnf..."
-            sudo dnf install -y ShellCheck
-            ;;
         ripgrep)
             echo "Installing ripgrep via dnf..."
             sudo dnf install -y ripgrep
@@ -226,6 +221,24 @@ install() {
             curl -fsS https://starship.rs/install.sh | sh -s -- -y
             append_once 'eval "$(starship init bash)"' "$BASHRC"
             ;;
+        nodejs)
+            echo "Installing Node.js via nvm..."
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.7/install.sh | bash
+            # Load nvm into the current shell (in lieu of restarting it) so the
+            # npm-based steps below can run within this same invocation. nvm.sh
+            # references unbound variables, so relax nounset while sourcing it.
+            set +u
+            # shellcheck disable=SC1091
+            \. "$HOME/.nvm/nvm.sh"
+            nvm install 24
+            set -u
+            ;;
+        bashls)
+            echo "Installing bash-language-server via npm..."
+            sudo npm install -g bash-language-server
+            echo "Installing shellcheck via dnf..."
+            sudo dnf install -y ShellCheck
+            ;;
         typescript)
             echo "Installing typescript tools via npm..."
             sudo npm install -g typescript typescript-language-server prettier
@@ -240,13 +253,14 @@ install() {
             install black
             install pylsp
             install beautysh
-            install bashls
             install ripgrep
             install clangd
             install rust
             install bear
             install neovim
             install starship
+            install nodejs
+            install bashls
             install typescript
             ;;
         *)
