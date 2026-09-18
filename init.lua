@@ -171,6 +171,15 @@ vim.lsp.config['ts_ls'] = {
 }
 vim.lsp.enable('ts_ls')
 
+-- Bash setup
+vim.lsp.config['bashls'] = {
+  cmd = { 'bash-language-server', 'start' },
+  filetypes = { 'sh', 'bash' },
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+vim.lsp.enable('bashls')
+
 -- Rust setup
 vim.g.rustaceanvim = {
   server = {
@@ -213,6 +222,7 @@ require("conform").setup({
     python = { "black" },
     rust = { "rustfmt" },
     sh = { "beautysh" },
+    bash = { "beautysh" },
     javascript = { "prettier" },
     javascriptreact = { "prettier" },
     typescript = { "prettier" },

@@ -57,6 +57,7 @@ Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtool
   black                 Install black (Python formatter) via pip
   pylsp                 Install pylsp (python-lsp-server) via pip
   beautysh              Install beautysh (Bash formatter) via pip
+  bashls                Install bash-language-server via npm and shellcheck via dnf
   ripgrep               Install ripgrep via dnf
   clangd                Install clangd + clang-format via dnf (clang-tools-extra)
   rust                  Install build deps via dnf, then rust via rustup, plus rustfmt/rust-analyzer components
@@ -163,6 +164,12 @@ install() {
             echo "Installing beautysh via pip..."
             pip_install beautysh
             ;;
+        bashls)
+            echo "Installing bash-language-server via npm..."
+            sudo npm install -g bash-language-server
+            echo "Installing shellcheck via dnf..."
+            sudo dnf install -y ShellCheck
+            ;;
         ripgrep)
             echo "Installing ripgrep via dnf..."
             sudo dnf install -y ripgrep
@@ -233,6 +240,7 @@ install() {
             install black
             install pylsp
             install beautysh
+            install bashls
             install ripgrep
             install clangd
             install rust
