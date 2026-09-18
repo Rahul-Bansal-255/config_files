@@ -5,11 +5,14 @@ local act = wezterm.action
 local config = {
     font_size = 14.0,
     enable_tab_bar = false,
+    default_prog = { "bash" },
 }
 
 
 wezterm.on("gui-startup", function(cmd)
-  local tab1, pane1, window = wezterm.mux.spawn_window(cmd or {})
+  local tab1, pane1, window = wezterm.mux.spawn_window({ args = { "bash" } })
+
+  local tab2, pane2, _ = window:spawn_tab({ args = { "bash" } })
 
   pane1:activate()
   window:gui_window():maximize()
