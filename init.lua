@@ -353,11 +353,17 @@ require('telescope').setup({
 vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true, desc = "Find files" })
 vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true, desc = "Live grep" })
 vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>", { noremap = true, silent = true, desc = "Show diagnostics" })
+
 require("rip-substitute").setup({})
 vim.keymap.set( { "n", "x" }, "<leader>fs",
   function()
     require("rip-substitute").sub()
   end,                                                          { noremap = true, silent = true, desc = "Search and replace" })
+
+vim.keymap.set('n', '<leader>fl', function()
+  require('line_history').show()
+end,                                                            { noremap = true, silent = true, desc = "Telescope current line git history" })
+
 require('ufo').setup({
     provider_selector = function(bufnr, filetype, buftype)
         return {'treesitter', 'indent'}
@@ -373,11 +379,11 @@ vim.keymap.set('n', '<leader>e', function()
 end,                                                            { noremap = true, silent = true, desc = "Show diagnostics float" })
 
 -- Git Integration
-vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>",   { noremap = true, silent = true, desc = "Git blame current line" })
+vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>",    { noremap = true, silent = true, desc = "Git blame current line" })
+vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>',           { noremap = true, silent = true, desc = "Open diff view" })
 vim.keymap.set('n', '<leader>gl', ':.,.DiffviewFileHistory<CR>', { noremap = true, silent = true, desc = "Show current line git history" })
-vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>',          { noremap = true, silent = true, desc = "Open diff view" })
-vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true, desc = "Show current file git history" })
-vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true, desc = "Show repo git history" })
+vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory %<CR>',  { noremap = true, silent = true, desc = "Show current file git history" })
+vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory<CR>',    { noremap = true, silent = true, desc = "Show repo git history" })
 
 -- Renderer
 vim.keymap.set("n", "<leader>rmd", function()
