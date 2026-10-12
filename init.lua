@@ -374,6 +374,7 @@ end,                                                            { noremap = true
 
 -- Git Integration
 vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>",   { noremap = true, silent = true, desc = "Git blame current line" })
+vim.keymap.set('n', '<leader>gl', ':.,.DiffviewFileHistory<CR>', { noremap = true, silent = true, desc = "Show current line git history" })
 vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>',          { noremap = true, silent = true, desc = "Open diff view" })
 vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory %<CR>', { noremap = true, silent = true, desc = "Show current file git history" })
 vim.keymap.set('n', '<leader>gH', ':DiffviewFileHistory<CR>',   { noremap = true, silent = true, desc = "Show repo git history" })
