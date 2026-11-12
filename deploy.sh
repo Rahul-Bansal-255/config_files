@@ -27,12 +27,19 @@ STARSHIP_CONFIG_PATH_DEST="$HOME/.config"
 STARSHIP_CONFIG_FILE_DEST="$STARSHIP_CONFIG_PATH_DEST/$STARSHIP_CONFIG"
 
 case "$(uname -m)" in
-    aarch64 | arm64) NVIM_ARCH="arm64" ;;
-    *) NVIM_ARCH="x86_64" ;;
+    aarch64 | arm64)
+        NVIM_ARCH="arm64"
+        GO_ARCH="arm64"
+        ;;
+    *)
+        NVIM_ARCH="x86_64"
+        GO_ARCH="amd64"
+        ;;
 esac
 NVIM_INSTALL_DIR="/opt/nvim-linux-${NVIM_ARCH}"
 NVIM_ARCHIVE="nvim-linux-${NVIM_ARCH}.tar.gz"
 NVIM_DOWNLOAD_URL="https://github.com/neovim/neovim/releases/latest/download/${NVIM_ARCHIVE}"
+GO_INSTALL_DIR="/usr/local/go"
 BEAR_VERSION="4.2.2"
 BEAR_PREFIX="/usr/local"
 BASHRC="$HOME/.bashrc"
@@ -47,7 +54,7 @@ Commands (can be chained in a single invocation):
   all                      Shorthand for: install all && configure all
   help                     Show this help message
 
-Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, npm for bashls/typescript, nvm for nodejs, upstream installers for neovim/starship/rust, build-from-source for bear):
+Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, npm for bashls/typescript, nvm for nodejs, upstream installers for neovim/starship/rust/golang, build-from-source for bear):
   epel                  Install the EPEL repository via dnf
   devtools              Install the "Development Tools" package group via dnf
   tmux                  Install tmux via dnf
@@ -66,6 +73,7 @@ Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtool
   nodejs                Install Node.js (v24) and npm via nvm
   bashls                Install bash-language-server via npm and shellcheck via dnf
   typescript            Install typescript, typescript-language-server, and prettier via npm
+  golang                Install Go from the official release archive and gopls via go install
   all                   Install all of the components above (not wezterm, which is configure-only)
 
 Configure components (symlinks dotfiles from this repo into \$HOME):
@@ -243,6 +251,26 @@ install() {
             echo "Installing typescript tools via npm..."
             sudo npm install -g typescript typescript-language-server prettier
             ;;
+        golang)
+            echo "Installing Go from official release archive..."
+            local go_version_info go_version go_archive tmp_dir
+            go_version_info="$(curl -fsSL "https://go.dev/VERSION?m=text")"
+            go_version="${go_version_info%%$'\n'*}"
+            if [ -z "$go_version" ]; then
+                echo "Error: failed to determine latest Go version." >&2
+                exit 1
+            fi
+            go_archive="${go_version}.linux-${GO_ARCH}.tar.gz"
+            tmp_dir=$(mktemp -d)
+            curl -fL -o "${tmp_dir}/${go_archive}" "https://go.dev/dl/${go_archive}"
+            sudo rm -rf "$GO_INSTALL_DIR"
+            sudo tar -C /usr/local -xzf "${tmp_dir}/${go_archive}"
+            rm -rf "$tmp_dir"
+            append_once 'export PATH="'"$GO_INSTALL_DIR"'/bin:$HOME/go/bin:$PATH"' "$BASHRC"
+            export PATH="${GO_INSTALL_DIR}/bin:$HOME/go/bin:$PATH"
+            echo "Installing gopls via go install..."
+            go install golang.org/x/tools/gopls@latest
+            ;;
         all)
             install epel
             install devtools
@@ -262,6 +290,7 @@ install() {
             install nodejs
             install bashls
             install typescript
+            install golang
             ;;
         *)
             echo "Unknown install component: $component" >&2

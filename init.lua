@@ -180,6 +180,15 @@ vim.lsp.config['bashls'] = {
 }
 vim.lsp.enable('bashls')
 
+-- Go setup
+vim.lsp.config['gopls'] = {
+  cmd = { 'gopls' },
+  filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+vim.lsp.enable('gopls')
+
 -- Rust setup
 vim.g.rustaceanvim = {
   server = {
@@ -219,6 +228,7 @@ require("conform").setup({
   formatters_by_ft = {
     c = { "clang_format" },
     cpp = { "clang_format" },
+    go = { "gofmt" },
     python = { "black" },
     rust = { "rustfmt" },
     sh = { "beautysh" },
@@ -280,7 +290,7 @@ require('gitsigns').setup({
     current_line_blame = true
 })
 require("nvim-treesitter.config").setup({
-  ensure_installed = { "c", "cpp", "python", "rust", "bash", "javascript", "typescript", "tsx", "json" },
+  ensure_installed = { "c", "cpp", "go", "gomod", "gosum", "gowork", "python", "rust", "bash", "javascript", "typescript", "tsx", "json" },
   highlight = { enable = true },
   indent = { enable = true },
 })

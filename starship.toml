@@ -10,7 +10,7 @@ $directory\
 [](fg:#3B4252 bg:#434C5E)\
 $git_branch$git_status\
 [](fg:#434C5E bg:#5E81AC)\
-$c$cpp$rust\
+$c$cpp$rust$golang\
 [](fg:#5E81AC bg:#88C0D0)\
 $python\
 [](fg:#88C0D0 bg:#A3BE8C)\
@@ -55,6 +55,10 @@ format = '[  $version ]($style)'
 [rust]
 style = "bg:#5E81AC fg:#ECEFF4"
 format = '[ 🦀 $version ]($style)'
+
+[golang]
+style = "bg:#5E81AC fg:#ECEFF4"
+format = '[  $version ]($style)'
 
 [python]
 style = "bg:#88C0D0 fg:#2E3440"
