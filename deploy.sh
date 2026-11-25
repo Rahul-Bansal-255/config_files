@@ -43,6 +43,11 @@ GO_INSTALL_DIR="/usr/local/go"
 BEAR_VERSION="4.2.2"
 BEAR_PREFIX="/usr/local"
 BASHRC="$HOME/.bashrc"
+SHELL_RELOAD_NEEDED=0
+
+# Temporary directories are removed on exit, including when a step fails.
+CLEANUP_DIRS=()
+trap 'rm -rf ${CLEANUP_DIRS[@]+"${CLEANUP_DIRS[@]}"}' EXIT
 
 usage() {
     cat <<EOF
@@ -54,8 +59,8 @@ Commands (can be chained in a single invocation):
   all                      Shorthand for: install all && configure all
   help                     Show this help message
 
-Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, npm for bashls/typescript, nvm for nodejs, upstream installers for neovim/starship/rust/golang, build-from-source for bear):
-  epel                  Install the EPEL repository via dnf
+Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtools, pip for pylsp/black/beautysh, npm for bashls/typescript, nvm for nodejs, cargo for treesitter, upstream installers for neovim/starship/rust/golang, build-from-source for bear):
+  epel                  Install the EPEL repository via dnf (skipped on Fedora)
   devtools              Install the "Development Tools" package group via dnf
   tmux                  Install tmux via dnf
   vim                   Install vim via dnf
@@ -67,12 +72,13 @@ Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtool
   ripgrep               Install ripgrep via dnf
   clangd                Install clangd + clang-format via dnf (clang-tools-extra)
   rust                  Install build deps via dnf, then rust via rustup, plus rustfmt/rust-analyzer components
+  treesitter            Install tree-sitter CLI via cargo (needed by nvim-treesitter to build parsers; requires rust)
   bear                  Install bear ${BEAR_VERSION} from source into ${BEAR_PREFIX} (requires rust, git and a C compiler)
   neovim                Install neovim from the pre-built release archive
   starship              Install starship via the official install script
   nodejs                Install Node.js (v24) and npm via nvm
-  bashls                Install bash-language-server via npm and shellcheck via dnf
-  typescript            Install typescript, typescript-language-server, and prettier via npm
+  bashls                Install bash-language-server via npm (requires nodejs) and shellcheck via dnf
+  typescript            Install typescript, typescript-language-server, and prettier via npm (requires nodejs)
   golang                Install Go from the official release archive and gopls via go install
   all                   Install all of the components above (not wezterm, which is configure-only)
 
@@ -96,11 +102,20 @@ EOF
 }
 
 safe_link() {
-    local src="$1" dest="$2" dest_dir
+    local src="$1" dest="$2" dest_dir backup
     dest_dir="$(dirname "$dest")"
     mkdir -p "$dest_dir"
-    if [ -e "$dest" ] || [ -L "$dest" ]; then
-        rm -rf "$dest"
+    if [ -L "$dest" ]; then
+        rm -f "$dest"
+    elif [ -e "$dest" ]; then
+        # dest may already be the repo file itself, e.g. via a symlinked parent directory.
+        if [ "$(realpath "$dest")" = "$(realpath "$src")" ]; then
+            echo "$dest already points to $src, leaving it unchanged."
+            return
+        fi
+        backup="${dest}.bak.$(date +%Y%m%d%H%M%S)"
+        echo "Backing up existing $dest to $backup"
+        mv "$dest" "$backup"
     fi
     ln -s "$src" "$dest"
 }
@@ -122,24 +137,39 @@ pip_install() {
     sudo pip3 install "$package"
 }
 
-reload_bashrc() {
-    if [ -f "$BASHRC" ]; then
-        echo "Reloading $BASHRC..."
-        # An interactive .bashrc may reference unbound variables (e.g. PS1),
-        # which would abort the script under nounset; relax it just here.
+npm_install() {
+    # In a fresh invocation nvm is not loaded, so npm may not be on PATH yet.
+    if ! command -v npm >/dev/null 2>&1 && [ -s "$HOME/.nvm/nvm.sh" ]; then
+        # nvm.sh references unbound variables, so relax nounset while sourcing it.
         set +u
-        # shellcheck disable=SC1090
-        source "$BASHRC" || true
+        # shellcheck disable=SC1091
+        \. "$HOME/.nvm/nvm.sh"
         set -u
     fi
+    if ! command -v npm >/dev/null 2>&1; then
+        echo "Error: npm not found; install the 'nodejs' component first." >&2
+        exit 1
+    fi
+    # nvm installs npm under \$HOME, so global installs need no sudo.
+    npm install -g "$@"
+}
+
+remind_shell_reload() {
+    # A script cannot change its parent shell, so PATH updates need a new shell.
+    echo "Open a new shell or run 'source $BASHRC' to apply PATH changes to your current shell."
 }
 
 install() {
     local component="$1"
     case "$component" in
         epel)
-            echo "Installing EPEL via dnf..."
-            sudo dnf install -y epel-release
+            # EPEL only exists for RHEL and its rebuilds; Fedora ships these packages already.
+            if (. /etc/os-release 2>/dev/null && [ "${ID:-}" = "fedora" ]); then
+                echo "Skipping EPEL: not needed on Fedora."
+            else
+                echo "Installing EPEL via dnf..."
+                sudo dnf install -y epel-release
+            fi
             ;;
         devtools)
             echo "Installing Development Tools group via dnf..."
@@ -191,6 +221,14 @@ install() {
             echo "Installing rustfmt and rust-analyzer components via rustup..."
             rustup component add rustfmt rust-analyzer
             ;;
+        treesitter)
+            echo "Installing tree-sitter CLI via cargo..."
+            if ! command -v cargo >/dev/null 2>&1; then
+                echo "Error: cargo not found; install the 'rust' component first." >&2
+                exit 1
+            fi
+            cargo install --locked tree-sitter-cli
+            ;;
         bear)
             echo "Installing bear from source..."
             if ! command -v cargo >/dev/null 2>&1; then
@@ -203,6 +241,7 @@ install() {
             fi
             local bear_tmp
             bear_tmp=$(mktemp -d)
+            CLEANUP_DIRS+=("$bear_tmp")
             # Build in a subshell.
             (
                 cd "$bear_tmp"
@@ -218,6 +257,7 @@ install() {
             echo "Installing neovim from pre-built archive..."
             local tmp_dir
             tmp_dir=$(mktemp -d)
+            CLEANUP_DIRS+=("$tmp_dir")
             curl -fL -o "${tmp_dir}/${NVIM_ARCHIVE}" "$NVIM_DOWNLOAD_URL"
             sudo rm -rf "$NVIM_INSTALL_DIR"
             sudo tar -C /opt -xzf "${tmp_dir}/${NVIM_ARCHIVE}"
@@ -243,13 +283,13 @@ install() {
             ;;
         bashls)
             echo "Installing bash-language-server via npm..."
-            sudo npm install -g bash-language-server
+            npm_install bash-language-server
             echo "Installing shellcheck via dnf..."
             sudo dnf install -y ShellCheck
             ;;
         typescript)
             echo "Installing typescript tools via npm..."
-            sudo npm install -g typescript typescript-language-server prettier
+            npm_install typescript typescript-language-server prettier
             ;;
         golang)
             echo "Installing Go from official release archive..."
@@ -262,6 +302,7 @@ install() {
             fi
             go_archive="${go_version}.linux-${GO_ARCH}.tar.gz"
             tmp_dir=$(mktemp -d)
+            CLEANUP_DIRS+=("$tmp_dir")
             curl -fL -o "${tmp_dir}/${go_archive}" "https://go.dev/dl/${go_archive}"
             sudo rm -rf "$GO_INSTALL_DIR"
             sudo tar -C /usr/local -xzf "${tmp_dir}/${go_archive}"
@@ -284,6 +325,7 @@ install() {
             install ripgrep
             install clangd
             install rust
+            install treesitter
             install bear
             install neovim
             install starship
@@ -381,7 +423,7 @@ while [ "$#" -gt 0 ]; do
             for component in "${components[@]}"; do
                 install "$component"
             done
-            reload_bashrc
+            SHELL_RELOAD_NEEDED=1
             ;;
         configure)
             components=()
@@ -397,12 +439,12 @@ while [ "$#" -gt 0 ]; do
             for component in "${components[@]}"; do
                 configure "$component"
             done
-            reload_bashrc
+            SHELL_RELOAD_NEEDED=1
             ;;
         all)
             install all
             configure all
-            reload_bashrc
+            SHELL_RELOAD_NEEDED=1
             ;;
         help)
             usage
@@ -414,3 +456,7 @@ while [ "$#" -gt 0 ]; do
             ;;
     esac
 done
+
+if [ "$SHELL_RELOAD_NEEDED" -eq 1 ]; then
+    remind_shell_reload
+fi

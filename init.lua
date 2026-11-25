@@ -289,10 +289,13 @@ require('which-key').setup()
 require('gitsigns').setup({
     current_line_blame = true
 })
-require("nvim-treesitter.config").setup({
-  ensure_installed = { "c", "cpp", "go", "gomod", "gosum", "gowork", "python", "rust", "bash", "javascript", "typescript", "tsx", "json" },
-  highlight = { enable = true },
-  indent = { enable = true },
+require("nvim-treesitter").install({ "c", "cpp", "go", "gomod", "gosum", "gowork", "python", "rust", "bash", "javascript", "typescript", "tsx", "json" })
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function(args)
+    if pcall(vim.treesitter.start, args.buf) then
+      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
 })
 require("treesitter-context").setup({
   enable = false,
@@ -356,7 +359,7 @@ require('telescope').setup({
   pickers = {
     find_files = {
       hidden = true,        -- Show hidden files
-      no_ignore = false,    -- Include files ignored by .gitignore
+      no_ignore = false,    -- Exclude files ignored by .gitignore
     },
   },
 })

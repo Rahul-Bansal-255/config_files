@@ -6,7 +6,7 @@ end
 
 local function parse_history(output)
   local entries, entry = {}, nil
-  for _, line in ipairs(vim.split(output, "\n", { plain = true })) do
+  for _, line in ipairs(vim.split(output, "\n", { plain = true, trimempty = true })) do
     -- Patch lines have a diff prefix, so they cannot be mistaken for this header.
     local hash, date, subject = line:match("^@@LINE_HISTORY@@(%x+)\t([^\t]+)\t(.*)$")
     if hash then
