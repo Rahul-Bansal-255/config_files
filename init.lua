@@ -121,12 +121,11 @@ local plugins = {
 
   -- Renderer
   { 'MeanderingProgrammer/render-markdown.nvim' },         -- Plugin to improve viewing Markdown files in Neovim
-}
 
-if games then
-  table.insert(plugins, { 'seandewar/killersheep.nvim' })            -- Neovim port of killersheep (with blood!)
-  table.insert(plugins, { 'Rahul-Bansal-255/nvimesweeper' })         -- Play Minesweeper in your favourite text editor
-end
+  -- Games (always listed so lazy-lock.json stays stable; only loaded with GAMES set)
+  { 'seandewar/killersheep.nvim', cond = games },          -- Neovim port of killersheep (with blood!)
+  { 'Rahul-Bansal-255/nvimesweeper', cond = games },       -- Play Minesweeper in your favourite text editor
+}
 
 require("lazy").setup(plugins)
 
@@ -140,8 +139,8 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- Server commands, filetypes and root markers come from nvim-lspconfig
 vim.lsp.config('*', { capabilities = capabilities })
 vim.lsp.config('clangd', { filetypes = { 'c', 'cpp' } })
-vim.lsp.config('ts_ls', { filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } })
-vim.lsp.enable({ 'clangd', 'pylsp', 'ts_ls', 'bashls', 'gopls' })
+vim.lsp.config('tsc', { filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } })
+vim.lsp.enable({ 'clangd', 'pylsp', 'tsc', 'bashls', 'gopls' })
 
 -- Rust setup
 vim.g.rustaceanvim = {

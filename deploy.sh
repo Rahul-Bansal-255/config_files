@@ -81,7 +81,7 @@ Install components (uses dnf for epel/tmux/vim/git/python/ripgrep/clangd/devtool
   starship              Install starship via the official install script
   nodejs                Install Node.js (v24) and npm via nvm
   bashls                Install bash-language-server via npm (requires nodejs) and shellcheck via dnf
-  typescript            Install typescript, typescript-language-server, and prettier via npm (requires nodejs)
+  typescript            Install typescript (7+, provides the tsc language server) and prettier via npm (requires nodejs)
   golang                Install Go from the official release archive (checksum-verified) and gopls via go install
   all                   Install all of the components above (not wezterm, which is configure-only)
 
@@ -153,21 +153,39 @@ verify_sha256() {
     fi
 }
 
+ensure_pipx() {
+    if command -v pipx >/dev/null 2>&1; then
+        return
+    fi
+    if dnf list -q pipx >/dev/null 2>&1; then
+        sudo dnf install -y pipx
+    else
+        # EL9 does not package pipx, so install it into the user site with pip.
+        echo "pipx not available via dnf, installing it with pip --user..."
+        sudo dnf install -y python3-pip
+        python3 -m pip install --user pipx
+    fi
+    # pipx and the tools it installs live in ~/.local/bin.
+    export PATH="$HOME/.local/bin:$PATH"
+}
+
 pipx_install() {
     local package="$1"
     # pipx gives each tool its own virtualenv under $HOME, leaving the system Python untouched.
-    sudo dnf install -y pipx
+    ensure_pipx
     pipx install "$package"
     pipx ensurepath
 }
 
 npm_install() {
-    # In a fresh invocation nvm is not loaded, so npm may not be on PATH yet.
-    if ! command -v npm >/dev/null 2>&1 && [ -s "$HOME/.nvm/nvm.sh" ]; then
+    # Use nvm's default node so packages land where new shells will find them,
+    # not in whichever npm happens to be on the inherited PATH.
+    if [ -s "$HOME/.nvm/nvm.sh" ]; then
         # nvm.sh references unbound variables, so relax nounset while sourcing it.
         set +u
         # shellcheck disable=SC1091
         \. "$HOME/.nvm/nvm.sh"
+        nvm use --silent default >/dev/null 2>&1 || true
         set -u
     fi
     if ! command -v npm >/dev/null 2>&1; then
@@ -335,6 +353,8 @@ install() {
             # shellcheck disable=SC1091
             \. "$HOME/.nvm/nvm.sh"
             nvm install 24
+            # nvm only sets the default on its first install, so pin it explicitly.
+            nvm alias default 24
             set -u
             ;;
         bashls)
@@ -345,7 +365,7 @@ install() {
             ;;
         typescript)
             echo "Installing typescript tools via npm..."
-            npm_install typescript typescript-language-server prettier
+            npm_install 'typescript@>=7' prettier
             ;;
         golang)
             local go_version_info go_version go_archive go_sha installed_go="" tmp_dir
