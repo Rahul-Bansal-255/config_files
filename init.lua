@@ -68,7 +68,11 @@ local plugins = {
   { 'neovim/nvim-lspconfig' },                             -- Quickstart configs for Nvim LSP
   { 'hrsh7th/nvim-cmp' },                                  -- A completion plugin for neovim coded in Lua
   { 'hrsh7th/cmp-nvim-lsp' },                              -- nvim-cmp source for neovim's built-in language server client
-  { 'L3MON4D3/LuaSnip' },                                  -- Snippet Engine for Neovim written in Lua
+  {
+      'L3MON4D3/LuaSnip',
+      dependencies = 'rafamadriz/friendly-snippets',
+  },                                                       -- Snippet Engine for Neovim written in Lua
+  { 'saadparwaiz1/cmp_luasnip' },                          -- luasnip completion source for nvim-cmp
   { 'mrcjkb/rustaceanvim' },                               -- 🦀 Supercharge your Rust experience in Neovim!
 
   -- Syntax Highlighting
@@ -183,7 +187,7 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
     ['<C-e>'] = cmp.mapping.abort(),
   }),
-  sources = { { name = 'nvim_lsp' } },
+  sources = { { name = 'nvim_lsp' }, { name = 'luasnip' } },
 })
 
 ------------------------------------------------------------
