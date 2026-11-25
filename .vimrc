@@ -19,6 +19,11 @@ set number
 " Wrap the text to next line
 set wrap
 
+" Indent with 4 spaces, matching the neovim config
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 " While searching though a file incrementally highlight matching characters as you type.
 set incsearch
 set hlsearch
@@ -80,9 +85,6 @@ set clipboard^=unnamed,unnamedplus
 " Vim as three types of options: "string", "number", and "boolean".
 " [^=] multiplies only in the context of "number" options but ['clipboard']
 " is a "string" option where [^=] prepends the value and [+=] appends the value.
-
-" Make a buffer modifiable
-set modifiable
 
 " Highlight cursor line underneath the cursor horizontally.
 set cursorline

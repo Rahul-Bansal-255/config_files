@@ -49,6 +49,7 @@ style = "bg:#5E81AC fg:#ECEFF4"
 format = '[  $version ]($style)'
 
 [cpp]
+disabled = false
 style = "bg:#5E81AC fg:#ECEFF4"
 format = '[  $version ]($style)'
 

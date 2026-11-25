@@ -6,6 +6,14 @@
 ------------------------------------------------------------
 vim.g.mapleader = ' '
 
+-- nvim-tree replaces netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+local function map(mode, lhs, rhs, desc, bufnr)
+  vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc, buffer = bufnr })
+end
+
 vim.opt.number = false
 vim.opt.relativenumber = true
 vim.opt.tabstop = 4
@@ -26,7 +34,7 @@ vim.diagnostic.config({
   virtual_text = false,
   signs = true,
   underline = true,
-  float = { show_header = false, source = 'always', border = 'single' },
+  float = { show_header = false, source = true, border = 'single' },
   severity_sort = true,
 })
 
@@ -103,7 +111,6 @@ local plugins = {
 
   -- Theme
   { 'morhetz/gruvbox' , name = 'gruvbox' },                -- Retro groove color scheme for Vim
-  { 'rose-pine/neovim', name = 'rose-pine' },              -- Soho vibes for Neovim
 
   -- Formatter & Debugger
   { "stevearc/conform.nvim" },                             -- Lightweight yet powerful formatter plugin for Neovim
@@ -126,76 +133,34 @@ vim.cmd("colorscheme gruvbox")
 ------------------------------------------------------------
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- Shared `on_attach` logic
-local on_attach = function(_, bufnr)
-  vim.keymap.set('n', "<leader>d", vim.lsp.buf.hover,          { noremap = true, silent = true, buffer = bufnr, desc = "Show documentation float" })
-  vim.keymap.set('n', "<leader>j", vim.lsp.buf.definition,     { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition" })
-  vim.keymap.set('n', '<leader>J', function()
-    vim.cmd('tab split')
-    vim.lsp.buf.definition()
-  end,                                                         { noremap = true, silent = true, buffer = bufnr, desc = "Go to definition in new tab" })
-  vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename,        { noremap = true, silent = true, buffer = bufnr, desc = "Rename symbol" })
-  vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action,   { noremap = true, silent = true, buffer = bufnr, desc = "Code action" })
-  vim.keymap.set('n', '<leader>lR', vim.lsp.buf.references,    { noremap = true, silent = true, buffer = bufnr, desc = "Show references" })
-end
-
--- C/C++ setup
-vim.lsp.config['clangd'] = {
-  cmd = { 'clangd' },
-  filetypes = { 'c', 'cpp' },
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-vim.lsp.enable('clangd')
-
--- Python setup
-vim.lsp.config['pylsp'] = {
-  cmd = { 'pylsp' },
-  filetypes = { 'python' },
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-vim.lsp.enable('pylsp')
-
--- TypeScript / JavaScript setup
-vim.lsp.config['ts_ls'] = {
-  cmd = { 'typescript-language-server', '--stdio' },
-  filetypes = {
-    'javascript',
-    'javascriptreact',
-    'typescript',
-    'typescriptreact',
-  },
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-vim.lsp.enable('ts_ls')
-
--- Bash setup
-vim.lsp.config['bashls'] = {
-  cmd = { 'bash-language-server', 'start' },
-  filetypes = { 'sh', 'bash' },
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-vim.lsp.enable('bashls')
-
--- Go setup
-vim.lsp.config['gopls'] = {
-  cmd = { 'gopls' },
-  filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-vim.lsp.enable('gopls')
+-- Server commands, filetypes and root markers come from nvim-lspconfig
+vim.lsp.config('*', { capabilities = capabilities })
+vim.lsp.config('clangd', { filetypes = { 'c', 'cpp' } })
+vim.lsp.config('ts_ls', { filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' } })
+vim.lsp.enable({ 'clangd', 'pylsp', 'ts_ls', 'bashls', 'gopls' })
 
 -- Rust setup
 vim.g.rustaceanvim = {
   server = {
-    on_attach = on_attach,
     capabilities = capabilities,
   },
 }
+
+-- Keymaps for every LSP client, including rust-analyzer
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local bufnr = args.buf
+    map('n', '<leader>d', vim.lsp.buf.hover, "Show documentation float", bufnr)
+    map('n', '<leader>j', vim.lsp.buf.definition, "Go to definition", bufnr)
+    map('n', '<leader>J', function()
+      vim.cmd('tab split')
+      vim.lsp.buf.definition()
+    end, "Go to definition in new tab", bufnr)
+    map('n', '<leader>lr', vim.lsp.buf.rename, "Rename symbol", bufnr)
+    map('n', '<leader>la', vim.lsp.buf.code_action, "Code action", bufnr)
+    map('n', '<leader>lR', vim.lsp.buf.references, "Show references", bufnr)
+  end,
+})
 
 ------------------------------------------------------------
 -- Autocompletion
@@ -240,13 +205,13 @@ require("conform").setup({
     json = { "prettier" },
   },
 })
-vim.keymap.set({ "n", "v" }, "<leader>F", function()
+map({ "n", "v" }, "<leader>F", function()
   require("conform").format({
     lsp_format = "fallback",
     async = false,
     timeout_ms = 3000,
   })
-end, { desc = "Format file" })
+end, "Format file")
 
 ------------------------------------------------------------
 -- UI Enhancements
@@ -289,7 +254,10 @@ require('which-key').setup()
 require('gitsigns').setup({
     current_line_blame = true
 })
-require("nvim-treesitter").install({ "c", "cpp", "go", "gomod", "gosum", "gowork", "python", "rust", "bash", "javascript", "typescript", "tsx", "json" })
+-- Building parsers needs the tree-sitter CLI (`deploy.sh install treesitter`)
+if vim.fn.executable("tree-sitter") == 1 then
+  require("nvim-treesitter").install({ "c", "cpp", "go", "gomod", "gosum", "gowork", "python", "rust", "bash", "javascript", "typescript", "tsx", "json" })
+end
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)
     if pcall(vim.treesitter.start, args.buf) then
@@ -318,31 +286,31 @@ require('render-markdown').setup({})
 ------------------------------------------------------------
 -- Tab Management
 for i = 0, 9 do
-  vim.keymap.set('n', '<leader>t' .. i, function()
+  map('n', '<leader>t' .. i, function()
     vim.cmd('tabnext ' .. i+1)
-  end, { noremap = true, silent = true, desc = "Go to tab " .. (i) })
+  end, "Go to tab " .. (i))
 end
-vim.keymap.set('n', '<leader>tc', ':tabnew<CR>',     { noremap = true, silent = true, desc = "Create new tab" })
-vim.keymap.set('n', '<leader>tx', ':tabclose<CR>',   { noremap = true, silent = true, desc = "Close current tab" })
-vim.keymap.set('n', '<leader>tl', ':tabnext<CR>',    { noremap = true, silent = true, desc = "Go to next tab" })
-vim.keymap.set('n', '<leader>th', ':tabprev<CR>',    { noremap = true, silent = true, desc = "Go to previous tab" })
-vim.keymap.set('n', '<leader>tH', ':tabmove -1<CR>', { noremap = true, silent = true, desc = "Move tab left" })
-vim.keymap.set('n', '<leader>tL', ':tabmove +1<CR>', { noremap = true, silent = true, desc = "Move tab right" })
+map('n', '<leader>tc', ':tabnew<CR>',     "Create new tab")
+map('n', '<leader>tx', ':tabclose<CR>',   "Close current tab")
+map('n', '<leader>tl', ':tabnext<CR>',    "Go to next tab")
+map('n', '<leader>th', ':tabprev<CR>',    "Go to previous tab")
+map('n', '<leader>tH', ':tabmove -1<CR>', "Move tab left")
+map('n', '<leader>tL', ':tabmove +1<CR>', "Move tab right")
 
 -- Directional window navigation
-vim.keymap.set('n', '<leader>wh', '<C-w>h',      { noremap = true, silent = true, desc = "Move to left window" })
-vim.keymap.set('n', '<leader>wj', '<C-w>j',      { noremap = true, silent = true, desc = "Move to window below" })
-vim.keymap.set('n', '<leader>wk', '<C-w>k',      { noremap = true, silent = true, desc = "Move to window above" })
-vim.keymap.set('n', '<leader>wl', '<C-w>l',      { noremap = true, silent = true, desc = "Move to right window" })
-vim.keymap.set('n', '<leader>w|', ':vsplit<CR>', { noremap = true, silent = true, desc = "Create vertical window split" })
-vim.keymap.set('n', '<leader>w-', ':split<CR>',  { noremap = true, silent = true, desc = "Create horizontal window split" })
-vim.keymap.set('n', '<leader>wx', ':close<CR>',  { noremap = true, silent = true, desc = "Close current window" })
+map('n', '<leader>wh', '<C-w>h',      "Move to left window")
+map('n', '<leader>wj', '<C-w>j',      "Move to window below")
+map('n', '<leader>wk', '<C-w>k',      "Move to window above")
+map('n', '<leader>wl', '<C-w>l',      "Move to right window")
+map('n', '<leader>w|', ':vsplit<CR>', "Create vertical window split")
+map('n', '<leader>w-', ':split<CR>',  "Create horizontal window split")
+map('n', '<leader>wx', ':close<CR>',  "Close current window")
 
 -- File Explorer
-vim.keymap.set('n', '<leader>nn', ':NvimTreeToggle<CR>', { noremap = true, silent = true, desc = "Toggle file explorer" })
-vim.keymap.set('n', '<leader>nj', function()
+map('n', '<leader>nn', ':NvimTreeToggle<CR>', "Toggle file explorer")
+map('n', '<leader>nj', function()
   require("nvim-tree.api").tree.find_file({ open = true, focus = true })
-end,                                                     { noremap = true, silent = true, desc = "Reveal current file in explorer" })
+end, "Reveal current file in explorer")
 
 -- Search
 require('telescope').setup({
@@ -363,53 +331,52 @@ require('telescope').setup({
     },
   },
 })
-vim.keymap.set('n', '<leader>ff', ":Telescope find_files<CR>",  { noremap = true, silent = true, desc = "Find files" })
-vim.keymap.set('n', '<leader>fg', ":Telescope live_grep<CR>",   { noremap = true, silent = true, desc = "Live grep" })
-vim.keymap.set('n', '<leader>fd', ":Telescope diagnostics<CR>", { noremap = true, silent = true, desc = "Show diagnostics" })
+map('n', '<leader>ff', ":Telescope find_files<CR>",  "Find files")
+map('n', '<leader>fg', ":Telescope live_grep<CR>",   "Live grep")
+map('n', '<leader>fd', ":Telescope diagnostics<CR>", "Show diagnostics")
 
 require("rip-substitute").setup({})
-vim.keymap.set( { "n", "x" }, "<leader>fs",
-  function()
-    require("rip-substitute").sub()
-  end,                                                          { noremap = true, silent = true, desc = "Search and replace" })
+map({ "n", "x" }, "<leader>fs", function()
+  require("rip-substitute").sub()
+end, "Search and replace")
 
-vim.keymap.set('n', '<leader>fl', function()
+map('n', '<leader>fl', function()
   require('line_history').show()
-end,                                                            { noremap = true, silent = true, desc = "Telescope current line git history" })
+end, "Telescope current line git history")
 
 require('ufo').setup({
     provider_selector = function(bufnr, filetype, buftype)
         return {'treesitter', 'indent'}
     end
 })
-vim.keymap.set('n', 'zR', require('ufo').openAllFolds, { desc = 'Open all folds' })
-vim.keymap.set('n', 'zM', require('ufo').closeAllFolds, { desc = 'Close all folds' })
-vim.keymap.set('n', 'zp', require('ufo').peekFoldedLinesUnderCursor, { desc = 'Peek fold' })
+map('n', 'zR', require('ufo').openAllFolds, 'Open all folds')
+map('n', 'zM', require('ufo').closeAllFolds, 'Close all folds')
+map('n', 'zp', require('ufo').peekFoldedLinesUnderCursor, 'Peek fold')
 
 -- Diagnostics
-vim.keymap.set('n', '<leader>e', function()
+map('n', '<leader>e', function()
   vim.diagnostic.open_float(nil, { focus = false })
-end,                                                            { noremap = true, silent = true, desc = "Show diagnostics float" })
+end, "Show diagnostics float")
 
 -- Git Integration
-vim.keymap.set('n', '<leader>gb', ":Gitsigns blame_line<CR>",    { noremap = true, silent = true, desc = "Git blame current line" })
-vim.keymap.set('n', '<leader>gd', ':DiffviewOpen<CR>',           { noremap = true, silent = true, desc = "Open diff view" })
-vim.keymap.set('n', '<leader>gl', ':.,.DiffviewFileHistory<CR>', { noremap = true, silent = true, desc = "Show current line git history" })
-vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory %<CR>',  { noremap = true, silent = true, desc = "Show current file git history" })
-vim.keymap.set('n', '<leader>gh', ':DiffviewFileHistory<CR>',    { noremap = true, silent = true, desc = "Show repo git history" })
+map('n', '<leader>gb', ":Gitsigns blame_line<CR>",    "Git blame current line")
+map('n', '<leader>gd', ':DiffviewOpen<CR>',           "Open diff view")
+map('n', '<leader>gl', ':.,.DiffviewFileHistory<CR>', "Show current line git history")
+map('n', '<leader>gf', ':DiffviewFileHistory %<CR>',  "Show current file git history")
+map('n', '<leader>gh', ':DiffviewFileHistory<CR>',    "Show repo git history")
 
 -- Renderer
-vim.keymap.set("n", "<leader>rmd", function()
+map("n", "<leader>rmd", function()
   require("render-markdown").toggle()
-end,                                                            { noremap = true, silent = true, desc = "Toggle markdown rendering" })
+end, "Toggle markdown rendering")
 
 -- Treesitter Context
-vim.keymap.set("n", "<leader>c", function()
-    require("treesitter-context").toggle()
-end,                                                            { noremap = true, silent = true, desc = "Toggle context" })
+map("n", "<leader>c", function()
+  require("treesitter-context").toggle()
+end, "Toggle context")
 
 -- Treesitter Virtual Text
-vim.keymap.set('n', '<leader>v', ':NvimContextVtToggle<CR>',    { noremap = true, silent = true, desc = "Toggle virtual text" })
+map('n', '<leader>v', ':NvimContextVtToggle<CR>', "Toggle virtual text")
 
 ------------------------------------------------------------
 -- Games Configuration

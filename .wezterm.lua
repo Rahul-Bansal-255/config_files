@@ -2,11 +2,10 @@ local wezterm = require 'wezterm'
 local act = wezterm.action
 
 
-local config = {
-    font_size = 14.0,
-    enable_tab_bar = false,
-    default_prog = { "bash" },
-}
+local config = wezterm.config_builder()
+config.font_size = 14.0
+config.enable_tab_bar = false
+config.default_prog = { "bash" }
 
 
 wezterm.on("gui-startup", function(cmd)
@@ -33,7 +32,7 @@ end)
 
 
 config.keys = {
-    { key = "F11" ,                  action = wezterm.action.ToggleFullScreen },
+    { key = "F11" ,                  action = act.ToggleFullScreen },
     { key = "T"   ,  mods = "CTRL",  action = act.EmitEvent("toggle-tabbar") },
 }
 
